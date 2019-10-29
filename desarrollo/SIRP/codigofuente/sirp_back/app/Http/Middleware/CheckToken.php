@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class CheckToken
 {
     protected $except = [
-        '/login',
+        '/usuario/login',
         '/usuario/registrar'
     ];
     /**
@@ -23,35 +23,35 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->input('token');
+        $token = $request->header('token');
 
         if(!$token){
             $res = [
-                'error'=>103,
-                'msg'=> __('errors.103')
+                'success'=>0,
+                'msg'=> 'Falta el parámetro Token'
             ];
-            return response()->json($res);
+            return response()->json($res, 500);
         }
-        $sesion = Usersession::where('tokenSesion',$token)->first();
-        if(!$sesion){
+        $session = Usersession::where('token_session',$token)->first();
+        if(!$session){
             $res = [
-                'error'=>100,
-                'msg'=> __('errors.100')
+                'success'=>0,
+                'msg'=> 'Token Inválido'
             ];
-            return response()->json($res);
+            return response()->json($res, 500);
         }
-        if(Carbon::parse($sesion->finSesion)->lte(Carbon::now())){
-            $update = Usersession::where('idSesion',$sesion->idSesion)->update(['estadoSesion'=>0]);
+        if(Carbon::parse($session->end_session)->lte(Carbon::now())){
+            $update = Usersession::where('session_id',$session->session_id)->update(['status'=>0]);
             $res = [
-                'error'=>101,
-                'msg'=> __('errors.101')
+                'success'=>0,
+                'msg'=> 'Token Expirado.'
             ];
-            return response()->json($res);
+            return response()->json($res, 500);
         }
         else{
             $res = [
-                'error'=>102,
-                'msg'=> __('errors.102')
+                'success'=>1,
+                'msg'=> 'Token Válido.'
             ];
 //            return response()->json($res);
         }
