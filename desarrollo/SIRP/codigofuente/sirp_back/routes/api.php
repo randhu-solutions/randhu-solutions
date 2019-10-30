@@ -21,5 +21,9 @@ Route::group(['middleware' => ['token']], function () {
 
     //products
     Route::post('/producto/listar','ProductController@index');
+    Route::post('/producto/crear','ProductController@store');
+    Route::post('/producto/buscar','ProductController@show');
+    Route::post('/producto/actualizar','ProductController@update');
+    Route::post('/producto/eliminar','ProductController@destroy');
 
 });

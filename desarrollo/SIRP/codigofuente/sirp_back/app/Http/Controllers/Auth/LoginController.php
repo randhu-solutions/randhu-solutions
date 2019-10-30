@@ -88,7 +88,7 @@ class LoginController extends Controller
                 'success'=>1,
                 'msg'=>'Login Exitoso',
                 'user'=> $user,
-                'token'=>$token,
+                'token'=> $token,
                 'expire'=>$expire->toDateTimeString(),
             ];
         }
