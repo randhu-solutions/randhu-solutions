@@ -26,4 +26,11 @@ Route::group(['middleware' => ['token']], function () {
     Route::post('/producto/actualizar','ProductController@update');
     Route::post('/producto/eliminar','ProductController@destroy');
 
+    //Brands
+    Route::post('/marca/listar','ProductBrandController@index');
+    Route::post('/marca/crear','ProductBrandController@store');
+    Route::post('/marca/buscar','ProductBrandController@show');
+    Route::post('/marca/actualizar','ProductBrandController@update');
+    Route::post('/marca/eliminar','ProductBrandController@destroy');
+
 });
