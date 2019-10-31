@@ -61,6 +61,7 @@
             >
               {{ errorMessages }}
               <v-btn
+                :loading="loadForm"
                 dark
                 flat
                 @click="snackbar = false"
@@ -77,6 +78,8 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
+
 export default {
   data: function () {
     return {
@@ -85,6 +88,7 @@ export default {
       errorMessages: 'Incorrect login info',
       snackbar: false,
       color: 'general',
+      loadForm: false,
       showPassword: false
     }
   },
@@ -94,8 +98,15 @@ export default {
     login: function () {
       let username = this.username
       let password = this.password
+      if (isEmpty(username) && isEmpty(username)) {
+        return false
+      }
+      this.loadForm = true
       this.$store.dispatch('login', { username, password })
-        .then(() => this.$router.push('/dashboard'))
+        .then(() => {
+          this.loadForm = false
+          this.$router.push('/dashboard')
+        })
         .catch(err => {
           console.log(err)
           this.snackbar = true
