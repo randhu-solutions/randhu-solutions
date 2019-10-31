@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('product_name');
             $table->integer('category_id');
             $table->integer('brand_id');
-            $table->integer('price');
+            $table->float('price');
             $table->timestamps();
             $table->softDeletes();
         });
