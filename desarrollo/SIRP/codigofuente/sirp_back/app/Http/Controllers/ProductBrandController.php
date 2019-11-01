@@ -58,4 +58,63 @@ class ProductBrandController extends Controller
         }
         return response()->json($res, $this->status);
     }
+
+    public function show(Request $request)
+    {
+        if(!$request->search)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro search no recibido'
+            ];
+            $this->status = 500;
+        }
+        else
+        {
+            $search = '%'.$request->search.'%';
+            $brand = Productbrand::where('brand_name','like',$search)
+                ->orderBy('created_at','asc')
+                ->get();
+
+            $res = [
+                'success' => 1,
+                'response' => $brand
+            ];
+        }
+        return response()->json($res ,$this->status);
+    }
+
+    public function destroy(Request $request)
+    {
+        if(!$request->brand_id)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro brand_id no recibido'
+
+            ];
+            $this->status = 500;
+        }
+        else
+        {
+            $brand = Productbrand::where('brand_id',$request->brand_id)->first();
+
+            if($brand){
+                $brand->delete();
+                $res = [
+                    'success' => 1,
+                    'msg' => 'Marca eliminada con exito'
+                ];
+            }
+            else
+            {
+                $res = [
+                    'success' => 0,
+                    'msg' => 'Marca no encontrado'
+                ];
+                $this->status = 500;
+            }
+        }
+        return response()->json($res,$this->status);
+    }
 }
