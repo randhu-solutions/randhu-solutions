@@ -40,4 +40,11 @@ Route::group(['middleware' => ['token']], function () {
     Route::post('/categoria/actualizar','ProductCategoryController@update');
     Route::post('/categoria/eliminar','ProductCategoryController@destroy');
 
+    //Sale
+    Route::post('/venta/listar','SalesController@index');
+    Route::post('/venta/crear','SalesController@store');
+    Route::post('/venta/buscar','SalesController@show');
+    Route::post('/venta/actualizar','SalesController@update');
+    Route::post('/venta/eliminar','SalesController@destroy');
+
 });
