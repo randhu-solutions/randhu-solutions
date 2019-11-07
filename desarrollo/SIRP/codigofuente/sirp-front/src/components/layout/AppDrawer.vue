@@ -18,6 +18,19 @@
       <v-list dense expand>
         <!--top-level link-->
         <v-list-tile
+          :to="{ name: 'DashboardPage' }"
+          ripple="ripple"
+          rel="noopener"
+        >
+          <v-list-tile-action>
+            <v-icon>dashboard</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Dashboard</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
           v-if="currentUser.role_name === 'Administrador'"
           :to="{ name: 'NeighborPage' }"
           ripple="ripple"
