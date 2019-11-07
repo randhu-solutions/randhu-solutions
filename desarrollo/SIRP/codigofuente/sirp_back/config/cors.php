@@ -11,13 +11,21 @@ return [
     | to accept any value.
     |
     */
-   
+
     'supportsCredentials' => false,
     'allowedOrigins' => ['*'],
     'allowedOriginsPatterns' => [],
-    'allowedHeaders' => ['*'],
-    'allowedMethods' => ['*'],
+    'allowedHeaders' => ['Content-Type',
+        'X-Auth-Token',
+        'Origin',
+        'Authorization',],
+    'allowedMethods' => ['POST',
+        'GET',
+        'OPTIONS',
+        'PUT',
+        'PATCH',
+        'DELETE',],
     'exposedHeaders' => [],
-    'maxAge' => 0,
+    'maxAge' => 60 * 60 * 24,
 
 ];
