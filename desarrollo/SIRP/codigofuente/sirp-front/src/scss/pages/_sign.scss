@@ -1,0 +1,85 @@
+.page-login{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: 100%;
+  &__right{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    background: {
+      position: center;
+      repeat: no-repeat;
+      image: url('https://picsum.photos/1200/800/?random');
+      size: cover;
+    };
+    color: #fff;
+    h1{
+      font-size: 34px;
+      font-weight: 400;
+    }
+    p{
+      font-size: 18px;
+      margin-bottom:0;
+    }
+    .layout{
+      position: relative;
+      z-index: 5;
+    }
+  }
+  &__left{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    // background-color: #fff;
+  }
+  .btn-forget{
+    background-color: transparent;
+    border: 0;
+    padding: 1px;
+    color: #fff;
+    &:focus{
+      outline: 0;
+    }
+    &:hover, &:focus{
+      text-decoration: none;
+      background-color: transparent;
+    }
+  }
+  &__logo{
+    width: 300px;
+    height: auto;
+    color: #fff;
+  }
+  .bg__black{
+    background-color: rgba(black, .2);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+}
+.v-menu__content{
+  // &.menuable__content__active {
+  //   z-index: 10 !important;
+  // }
+  .v-list{
+    .v-list__tile{
+      &:hover{
+        cursor: pointer !important;
+      }
+    }
+  }
+}
+.v-chip.v-chip.v-chip--outline{
+  height: 28px;
+}

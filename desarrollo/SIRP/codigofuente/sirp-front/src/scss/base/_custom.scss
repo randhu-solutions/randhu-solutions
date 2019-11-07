@@ -1,0 +1,11 @@
+.table-striped .v-datatable > tbody > tr:nth-of-type(odd){
+  background-color: rgba(195, 195, 195, 0.2) !important;
+}
+.btn-transform-none{
+  text-transform: none !important;
+}
+.card-link{
+  &:hover{
+    cursor: pointer;
+  }
+}
