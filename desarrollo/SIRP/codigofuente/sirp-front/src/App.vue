@@ -1,36 +1,78 @@
 <template>
-  <main>
-    <transition mode="out-in">
-      <router-view/>
-    </transition>
-  </main>
+  <div id="appRoot">
+    <template v-if="!$route.meta.public">
+      <v-app id="inspire" class="app">
+        <app-drawer class="app--drawer"></app-drawer>
+        <app-toolbar class="app--toolbar"></app-toolbar>
+        <v-content>
+          <!-- Page Header -->
+          <page-header v-if="$route.meta.breadcrumb"></page-header>
+          <div class="page-wrapper">
+            <router-view></router-view>
+          </div>
+        </v-content>
+        <!-- Go to top -->
+        <app-fab></app-fab>
+      </v-app>
+    </template>
+    <template v-else>
+      <transition>
+        <keep-alive>
+          <router-view :key="$route.fullpath"></router-view>
+        </keep-alive>
+      </transition>
+    </template>
+  </div>
 </template>
+<script>
+import AppDrawer from "@/components/layout/AppDrawer";
+import AppToolbar from "@/components/layout/AppToolbar";
+import AppFab from "@/components/layout/AppFab";
+import PageHeader from "@/components/layout/PageHeader";
+// import AppEvents from  './event'
+export default {
+  components: {
+    AppDrawer,
+    AppToolbar,
+    AppFab,
+    PageHeader
+  },
+  data: () => ({
+    scrollSettings: {
+      maxScrollbarLength: 160
+    },
+    expanded: true,
+    rightDrawer: false,
+    snackbar: {
+      show: false,
+      text: "",
+      color: ""
+    }
+  }),
 
-<style lang="scss">
-@import "@/styles/index.scss";
+  computed: {},
 
-/* Remove in 1.2 */
-.v-datatable thead th.column.sortable i {
-  vertical-align: unset;
+  created() {
+    // AppEvents.forEach(item => {
+    //   this.$on(item.name, item.callback);
+    // });
+    window.getApp = this;
+  },
+  methods: {
+    openThemeSettings() {
+      this.$vuetify.goTo(0);
+      this.rightDrawer = !this.rightDrawer;
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.setting-fab {
+  top: 50% !important;
+  right: 0;
+  border-radius: 0;
+}
+.page-wrapper {
+  min-height: calc(100vh - 64px - 50px - 81px);
 }
 </style>
-<script>
-// checks to see if auth jwt token is valid or has expired, if it gets back 401 error log out
-export default {
-  created: function () {
-    this.$http.interceptors.response.use((response) => {
-      return response
-    }, (error) => {
-      if (error.response.status === 401) {
-        if (this.$store.getters.authorized) {
-          this.$store.dispatch('refreshtoken')
-        } else {
-          return Promise.reject(error)
-        }
-      } else {
-        return Promise.reject(error)
-      }
-    })
-  }
-}
-</script>

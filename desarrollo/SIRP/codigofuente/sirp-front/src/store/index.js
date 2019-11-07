@@ -1,31 +1,48 @@
-/**
- * Vuex
- *
- * @library
- *
- * https://vuex.vuejs.org/en/
- */
+import Vue from "vue";
+import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
+import roles from "./roles";
+import session from "./session";
+import invitations from "./invitations";
+import neighbor from "./neighbor";
+import areas from "./areas";
+import reserve from "./reserve";
+import axios from "../http";
 
-// Lib imports
-import Vue from 'vue'
-import Vuex from 'vuex'
+Vue.use(Vuex);
 
-// Store functionality
-import actions from './actions'
-import getters from './getters'
-import modules from './modules'
-import mutations from './mutations'
-import state from './state'
+// ticketStates
 
-Vue.use(Vuex)
-
-// Create a new store
-const store = new Vuex.Store({
-  actions,
-  getters,
-  modules,
-  mutations,
-  state
-})
-
-export default store
+export default new Vuex.Store({
+  state: {
+    ticketStatuses: [],
+    departments: []
+  },
+  mutations: {
+    setTicketStatuses(state, statuses) {
+      state.ticketStatuses = statuses;
+    },
+    setDepartments(state, departments) {
+      state.departments = departments;
+    }
+  },
+  actions: {
+    async fetchTicketStatuses({ commit }) {
+      const { data } = await axios.get("/ticketStates");
+      commit("setTicketStatuses", data.ticketStates);
+    },
+    async fetchDepartments({ commit }) {
+      const { data } = await axios.get("/departmentsByEdifice");
+      commit("setDepartments", data.departments);
+    }
+  },
+  modules: {
+    roles,
+    reserve,
+    session,
+    invitations,
+    neighbor,
+    areas
+  },
+  plugins: [createPersistedState({ paths: ["session"] })]
+});
