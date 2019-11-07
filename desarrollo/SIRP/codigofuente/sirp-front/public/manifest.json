@@ -1,6 +1,6 @@
 {
-  "name": "vma",
-  "short_name": "vma",
+  "name": "my-vecindad",
+  "short_name": "my-vecindad",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
