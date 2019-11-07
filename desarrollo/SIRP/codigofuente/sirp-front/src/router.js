@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 import LoginPage from "./pages/LoginPage.vue";
+import RegisterPage from "./pages/RegisterPage.vue";
 import GuestPage from "./pages/GuestPage.vue";
-import NeighborPage from "./pages/NeighborPage.vue";
+// import NeighborPage from "./pages/NeighborPage.vue";
 
 Vue.use(Router);
 
@@ -40,18 +41,26 @@ export default new Router({
       component: LoginPage
     },
     {
+      path: "/register",
+      name: "RegisterPage",
+      meta: {
+        public: true
+      },
+      component: RegisterPage
+    },
+    {
       path: "/invitados",
       meta: { breadcrumb: true },
       name: "GuestPage",
       component: GuestPage,
       beforeEnter: requireAuth
-    },
-    {
-      path: "/vecinos",
-      meta: { breadcrumb: true },
-      name: "NeighborPage",
-      component: NeighborPage,
-      beforeEnter: requireAuth
     }
+    // {
+    //   path: "/vecinos",
+    //   meta: { breadcrumb: true },
+    //   name: "NeighborPage",
+    //   component: NeighborPage,
+    //   beforeEnter: requireAuth
+    // }
   ]
 });

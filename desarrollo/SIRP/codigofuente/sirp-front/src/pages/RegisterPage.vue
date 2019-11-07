@@ -11,18 +11,36 @@
                 </div>
                 <v-form>
                   <v-text-field
+                    v-model="form.last_name"
+                    name="lastname"
+                    label="Nombres"
+                    hide-details
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="form.first_name"
+                    class="mt-2"
+                    name="firstname"
+                    label="Apellidos"
+                    hide-details
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="form.username"
+                    class="mt-2"
+                    name="username"
+                    label="Usuario"
+                    hide-details
+                  ></v-text-field>
+                  <v-text-field
                     v-model="form.email"
-                    append-icon="person"
+                    class="mt-2"
                     name="login"
                     label="Correo"
                     type="email"
                     hide-details
                   ></v-text-field>
                   <v-text-field
-                    id="password"
                     v-model="form.password"
                     class="mt-2"
-                    append-icon="lock"
                     name="password"
                     label="Contraseña"
                     type="password"
@@ -33,14 +51,14 @@
               <v-card-actions class="d-block pt-1">
                 <div class="d-block">
                   <p style="text-align: right;">
-                    <router-link class="caption" :to="{ name: 'RegisterPage' }"
-                      >Registrate aquí</router-link
+                    <router-link :to="{ name: 'LoginPage' }"
+                      >Iniciar sesión</router-link
                     >
                   </p>
                 </div>
                 <div class="d-block">
                   <v-btn block color="primary" :loading="loading" @click="login"
-                    >Iniciar sesión</v-btn
+                    >Registrar</v-btn
                   >
                 </div>
               </v-card-actions>
@@ -56,13 +74,16 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "LoginPage",
+  name: "RegisterPage",
   data: () => ({
     loading: false,
     form: {
-      email: "usuario1@gmail.com",
-      password: "usuario1",
-      remember_me: true
+      username: "",
+      email: "",
+      password: "",
+      last_name: "",
+      first_name: "",
+      rol: 2
     }
   }),
   computed: {
@@ -73,6 +94,17 @@ export default {
   methods: {
     login() {
       this.loading = true;
+      console.log(this.form);
+      this.axios
+        .post("usuario/registrar", this.form, {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+        });
+      /*
       this.$store
         .dispatch("login", this.form)
         .then(() => {
@@ -87,6 +119,7 @@ export default {
           this.$router.push(route);
         })
         .finally(() => (this.loading = false));
+      */
     }
   }
 };
