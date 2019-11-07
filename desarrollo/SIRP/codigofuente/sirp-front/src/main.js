@@ -7,11 +7,14 @@ import store from "./store";
 import "./registerServiceWorker";
 import "./scss/app.scss";
 import Pusher from "pusher-js";
+import HighchartsVue from "highcharts-vue";
 
 Vue.prototype.axios = axios;
 Vue.config.productionTip = false;
 
 window.Pusher = Pusher;
+
+Vue.use(HighchartsVue);
 
 new Vue({
   router,
