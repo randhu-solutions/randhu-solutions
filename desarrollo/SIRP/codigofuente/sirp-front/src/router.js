@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import LoginPage from "./pages/LoginPage.vue";
 import GuestPage from "./pages/GuestPage.vue";
-import NeighborPage from "./pages/NeighborPage.vue";
+import DashboardPage from "./pages/DashboardPage.vue";
 
 Vue.use(Router);
 
@@ -47,11 +47,10 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: "/vecinos",
+      path: "/dashboard",
       meta: { breadcrumb: true },
-      name: "NeighborPage",
-      component: NeighborPage,
-      beforeEnter: requireAuth
+      name: "DashboardPage",
+      component: DashboardPage
     }
   ]
 });
