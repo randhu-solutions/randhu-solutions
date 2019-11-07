@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import LoginPage from "./pages/LoginPage.vue";
+import RegisterPage from "./pages/RegisterPage.vue";
 import GuestPage from "./pages/GuestPage.vue";
 import DashboardPage from "./pages/DashboardPage.vue";
 
@@ -38,6 +39,14 @@ export default new Router({
         public: true
       },
       component: LoginPage
+    },
+    {
+      path: "/register",
+      name: "RegisterPage",
+      meta: {
+        public: true
+      },
+      component: RegisterPage
     },
     {
       path: "/invitados",
