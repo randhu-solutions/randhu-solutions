@@ -1,7 +1,7 @@
-// https://vuex.vuejs.org/en/getters.html
-
-// authorized lets you know if the token is true or not
-export default {
-  authorized: state => !!state.token,
-  authstatus: state => state.authStatus
+const getters = {
+  device: state => state.app.device,
+  theme: state => state.app.theme,
+  color: state => state.app.color
 }
+
+export default getters
