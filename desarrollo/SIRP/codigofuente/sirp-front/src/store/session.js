@@ -20,13 +20,11 @@ const session = {
   actions: {
     // values: { email, password }
     async login({ commit }, values) {
-      const {
-        data: { access_token }
-      } = await axios.post(`usuario/login`, values);
-      localStorage.setItem("API_TOKEN", access_token);
-      commit("setToken", access_token);
-      const { data: userData } = await axios.get("/user");
-      commit("setCurrentUser", userData);
+      const { data } = await axios.post(`usuario/login`, values);
+      console.log("login", data);
+      localStorage.setItem("API_TOKEN", data.token);
+      commit("setToken", data);
+      commit("setCurrentUser", data.user);
     },
     async logout({ commit }) {
       localStorage.removeItem("API_TOKEN");

@@ -60,8 +60,8 @@ export default {
   data: () => ({
     loading: false,
     form: {
-      email: "usuario1@gmail.com",
-      password: "usuario1",
+      email: "avargas@gmail.com",
+      password: "12345678",
       remember_me: true
     }
   }),
@@ -76,15 +76,7 @@ export default {
       this.$store
         .dispatch("login", this.form)
         .then(() => {
-          let route;
-          if (
-            ["Residente", "Recepcionista"].includes(this.currentUser.role_name)
-          ) {
-            route = { name: "GuestPage" };
-          } else if (this.currentUser.role_name === "Administrador") {
-            route = { name: "NeighborPage" };
-          }
-          this.$router.push(route);
+          this.$router.push({ name: "ProductPage" });
         })
         .finally(() => (this.loading = false));
     }

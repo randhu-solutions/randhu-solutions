@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage.vue";
 import RegisterPage from "./pages/RegisterPage.vue";
 import GuestPage from "./pages/GuestPage.vue";
 import DashboardPage from "./pages/DashboardPage.vue";
+import ProductPage from "./pages/product/ProductPage.vue";
 
 Vue.use(Router);
 
@@ -29,7 +30,7 @@ export default new Router({
       meta: {},
       name: "Root",
       redirect: {
-        name: "GuestPage"
+        name: "ProductPage"
       }
     },
     {
@@ -60,6 +61,12 @@ export default new Router({
       meta: { breadcrumb: true },
       name: "DashboardPage",
       component: DashboardPage
+    },
+    {
+      path: "/productos",
+      meta: { breadcrumb: true },
+      name: "ProductPage",
+      component: ProductPage
     }
   ]
 });
