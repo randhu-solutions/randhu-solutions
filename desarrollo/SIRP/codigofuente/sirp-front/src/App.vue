@@ -11,8 +11,6 @@
             <router-view></router-view>
           </div>
         </v-content>
-        <!-- Go to top -->
-        <app-fab></app-fab>
       </v-app>
     </template>
     <template v-else>
@@ -27,14 +25,12 @@
 <script>
 import AppDrawer from "@/components/layout/AppDrawer";
 import AppToolbar from "@/components/layout/AppToolbar";
-import AppFab from "@/components/layout/AppFab";
 import PageHeader from "@/components/layout/PageHeader";
 // import AppEvents from  './event'
 export default {
   components: {
     AppDrawer,
     AppToolbar,
-    AppFab,
     PageHeader
   },
   data: () => ({
