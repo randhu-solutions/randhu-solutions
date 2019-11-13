@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Sale;
 use App\SaleDetail;
+use DateTime;
 use Illuminate\Http\Request;
 
 class SalesController extends Controller
@@ -26,7 +27,74 @@ class SalesController extends Controller
 
     public function store(Request $request)
     {
+        if(!$request->serie)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro serie no recibido'
 
+            ];
+            $this->status = 500;
+        }
+        elseif(!$request->igv)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro igv no recibido'
+
+            ];
+            $this->status = 500;
+        }
+        elseif(!$request->total)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro total no recibido'
+
+            ];
+            $this->status = 500;
+        }
+        else
+        {   $number = Sale::select('number','serie')
+            ->where('serie',$request->serie)
+            ->orderBy('created_at','desc')
+            ->first();
+            if(!$number)
+            {
+                $number = 1;
+            }
+            else
+            {
+                $number = $number->number + 1;
+            }
+            $sale = new Sale;
+            $sale->user_id = $request->user_id;
+            $sale->serie = $request->serie;
+            $sale->number = $number;
+            $sale->sale_date = new DateTime();
+            $sale->igv = $request->igv;
+            $sale->total = $request->total;
+            $sale->status = 1;
+            $sale->save();
+            foreach ($request->items as $items)
+            {
+                $detail = new SaleDetail;
+                $detail->sale_id = $sale->sale_id;
+                $detail->product_id = $items['product_id'];
+                $detail->product_description = $items['product_description'];
+                $detail->quantity = $items['quantity'];
+                $detail->price_unit = $items['price_unit'];
+                $detail->price_total = $items['price_total'];
+                $detail->save();
+            }
+
+            $res = [
+                'success' => 1,
+                'msg' => 'Venta Registrada con Exito'
+
+            ];
+        }
+        return response()->json($res, $this->status);
     }
 
     public function show(Request $request)
