@@ -1,29 +1,9 @@
 <template>
   <v-toolbar color="primary" fixed dark app>
     <v-toolbar-title class="ml-0 pl-3">
-      {{ currentUser.name }} ({{ currentUser.role_name }})
+      {{ `${currentUser.profile.first_name} ${currentUser.profile.last_name}` }}
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-menu
-      offset-y
-      origin="center center"
-      class="elelvation-1"
-      :nudge-bottom="14"
-      transition="scale-transition"
-    >
-      <v-btn slot="activator" icon flat>
-        <v-badge color="red" overlap>
-          <span v-if="unreadNotificationsCount" slot="badge">{{
-            unreadNotificationsCount
-          }}</span>
-          <v-icon medium>notifications</v-icon>
-        </v-badge>
-      </v-btn>
-      <notification-list
-        :notifications="notifications"
-        @read-notification="readNotification"
-      />
-    </v-menu>
     <v-menu
       offset-y
       origin="center center"
@@ -53,14 +33,9 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import NotificationList from "./NotificationList";
-import axios from "../../http";
 
 export default {
   name: "AppToolbar",
-  components: {
-    NotificationList
-  },
   data: () => ({
     items: [
       {
@@ -86,22 +61,11 @@ export default {
         .length;
     }
   },
-  async mounted() {
-    this.fetchNotifications();
-  },
   methods: {
     onLogout() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push({ name: "LoginPage" });
       });
-    },
-    async fetchNotifications() {
-      const { data } = await axios.get("/notifications");
-      this.notifications = data;
-    },
-    async readNotification({ id }) {
-      await axios.post(`/notifications/${id}/read`);
-      this.fetchNotifications();
     }
   }
 };
