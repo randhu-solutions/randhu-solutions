@@ -9,7 +9,7 @@
     width="200"
   >
     <v-toolbar color="primary darken-1" dark>
-      <h3>{{ currentUser.edifice.name }}</h3>
+      <h3>Randhu Solutions</h3>
     </v-toolbar>
     <vue-perfect-scrollbar
       class="drawer-menu--scroll"
@@ -31,53 +31,15 @@
         </v-list-tile>
 
         <v-list-tile
-          v-if="currentUser.role_name === 'Administrador'"
-          :to="{ name: 'NeighborPage' }"
+          :to="{ name: 'ProductPage' }"
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-action>
-            <v-icon>people</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Vecinos</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile :to="{ name: 'GuestPage' }" ripple="ripple" rel="noopener">
           <v-list-tile-action>
             <v-icon>portrait</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Invitados</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile
-          v-if="['Administrador', 'Residente'].includes(currentUser.role_name)"
-          :to="{ name: 'TicketPage' }"
-          ripple="ripple"
-          rel="noopener"
-        >
-          <v-list-tile-action>
-            <v-icon>priority_high</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Tickets</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile
-          v-if="['Administrador', 'Residente'].includes(currentUser.role_name)"
-          :to="{ name: 'ReservePage' }"
-          ripple="ripple"
-          rel="noopener"
-        >
-          <v-list-tile-action>
-            <v-icon>date_range</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Reservación</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

@@ -57,7 +57,11 @@
                   </p>
                 </div>
                 <div class="d-block">
-                  <v-btn block color="primary" :loading="loading" @click="login"
+                  <v-btn
+                    block
+                    color="primary"
+                    :loading="loading"
+                    @click="onSubmitRegister()"
                     >Registrar</v-btn
                   >
                 </div>
@@ -92,18 +96,13 @@ export default {
     })
   },
   methods: {
-    login() {
+    onSubmitRegister() {
       this.loading = true;
       console.log(this.form);
-      this.axios
-        .post("usuario/registrar", this.form, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
-          }
-        })
-        .then(resp => {
-          console.log(resp);
-        });
+      this.axios.post("usuario/registrar", this.form).then(resp => {
+        console.log(resp);
+        this.onSubmitLogin();
+      });
       /*
       this.$store
         .dispatch("login", this.form)
@@ -120,6 +119,18 @@ export default {
         })
         .finally(() => (this.loading = false));
       */
+    },
+    onSubmitLogin() {
+      this.loading = true;
+      this.$store
+        .dispatch("login", {
+          email: this.form.email,
+          password: this.form.password
+        })
+        .then(() => {
+          this.$router.push({ name: "ProductPage" });
+        })
+        .finally(() => (this.loading = false));
     }
   }
 };

@@ -5,8 +5,9 @@ import roles from "./roles";
 import session from "./session";
 import invitations from "./invitations";
 import neighbor from "./neighbor";
+import products from "./products";
 import areas from "./areas";
-import reserve from "./reserve";
+// import reserve from "./reserve";
 import axios from "../http";
 
 Vue.use(Vuex);
@@ -38,10 +39,11 @@ export default new Vuex.Store({
   },
   modules: {
     roles,
-    reserve,
+    // reserve,
     session,
     invitations,
     neighbor,
+    products,
     areas
   },
   plugins: [createPersistedState({ paths: ["session"] })]
