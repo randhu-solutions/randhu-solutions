@@ -23,7 +23,7 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->header('token');
+        $token = $request->header('authorization');
 
         if(!$token){
             $res = [
