@@ -18,6 +18,9 @@ Route::post('/usuario/login','Auth\LoginController@dologin');
 
 Route::group(['middleware' => ['token']], function () {
 
+    //users
+    Route::post('/usuario/listar','UserController@list');
+
     //products
     Route::post('/producto/listar','ProductController@index');
     Route::post('/producto/crear','ProductController@store');
