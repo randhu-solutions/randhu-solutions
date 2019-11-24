@@ -23,8 +23,8 @@ const products = {
       commit("setProducts", products);
       commit("setLoadProducts", true);
     },
-    async createProduct({ dispatch }, values) {
-      const result = await axios.post(`producto/crear`, values);
+    async createProduct({ dispatch }, payload) {
+      const result = await axios.post(`producto/crear`, payload);
       // commit('setItems', data.invitations);
       console.log("create product result", result);
       await dispatch("fetchProduct");

@@ -7,10 +7,10 @@
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
           <v-toolbar card dense color="transparent">
-            <v-toolbar-title><h4>Mis Productos</h4></v-toolbar-title>
+            <v-toolbar-title><h4>Mis Categorías</h4></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
-              Agregar producto
+              Agregar categoría
             </v-btn>
           </v-toolbar>
           <template v-if="!loading">
@@ -39,7 +39,7 @@
                 </v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="products"
+                  :items="categories"
                   :search="searchInvitation"
                   hide-actions
                   class="elevation-2"
@@ -47,22 +47,12 @@
                   <template v-slot:headers="props">
                     <tr>
                       <th class="text-xs-left">Nombre</th>
-                      <th class="text-xs-left" width="150">Marca</th>
-                      <th class="text-xs-left" width="100">Código</th>
-                      <th class="text-xs-left" width="100">Precio</th>
                       <th class="text-xs-left" width="80">Acción</th>
                     </tr>
                   </template>
                   <template slot="items" slot-scope="props">
                     <td class="text-xs-left">
-                      {{ props.item.product_name }}
-                    </td>
-                    <td class="text-xs-left">
-                      {{ props.item.brand.brand_name }}
-                    </td>
-                    <td class="text-xs-left">{{ props.item.product_code }}</td>
-                    <td class="text-xs-left">
-                      {{ `S/. ${props.item.price}` }}
+                      {{ props.item.category_name }}
                     </td>
                     <td class="text-xs-right">
                       <v-menu bottom left>
@@ -96,65 +86,24 @@
     </vue-perfect-scrollbar>
 
     <v-dialog v-model="dialogAdd" persistent max-width="600px">
-      <product-form
+      <category-form
         :type="typeDialog"
-        :product="selectedItem"
+        :category="selectedItem"
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
     </v-dialog>
 
-    <v-dialog v-model="dialogDetail" persistent max-width="450px">
-      <v-card v-if="dialogDetail">
-        <v-card-title>
-          <span class="subheading text-uppercase">{{ selectedItem.name }}</span>
-          <span v-if="selectedItem.dni" class="ml-2 body-1"
-            >, DNI: <b>{{ selectedItem.dni }}</b></span
-          >
-        </v-card-title>
-        <v-card-text class="pt-0">
-          <v-list two-line class="pa-0">
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">mail</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ selectedItem.email }}</v-list-tile-title>
-                <v-list-tile-sub-title>Email</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">date_range</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{
-                  selectedItem.regular_visitor
-                    ? "Invitado frecuente"
-                    : selectedItem.invitation_date
-                }}</v-list-tile-title>
-                <v-list-tile-sub-title>Fecha de llegada</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialogDetail = false"
-            >Cerrar</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-dialog v-model="dialogDelete" persistent max-width="450px">
       <v-card v-if="dialogDelete">
-        <v-card-title>
+        <v-card-title class="pb-0">
           <span class="subheading">Eliminar Invitado</span>
         </v-card-title>
         <v-card-text>
           <div>
-            ¿Estás seguro que deseas eliminar a {{ selectedItem.name }}?
+            ¿Estás seguro que deseas eliminar a
+            <b>{{ selectedItem.category_name }}</b
+            >?
           </div>
         </v-card-text>
         <v-card-actions>
@@ -175,12 +124,12 @@
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { mapState, mapActions } from "vuex";
-import ProductForm from "@/components/product/ProductForm";
+import CategoryForm from "@/components/category/CategoryForm";
 
 export default {
-  name: "ProductPage",
+  name: "CategoryPage",
   components: {
-    ProductForm,
+    CategoryForm,
     VuePerfectScrollbar
   },
   data() {
@@ -195,37 +144,20 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
-      relation: ["Amigo", "Familiar", "Vecino"],
-      headers: [
-        { text: "Nombre y Apellido", value: "name" },
-        { text: "DNI", value: "dni" },
-        { text: "Fecha de Ingreso" },
-        { text: "Correo", value: "email" },
-        { text: "Acción" }
-      ]
+      headers: [{ text: "Nombre", value: "category_name" }, { text: "Acción" }]
     };
   },
   computed: {
     ...mapState({
-      loading: state => state.products.loading,
-      products: state => state.products.items,
-      currentUser: state => state.session.currentUser
+      loading: state => state.category.loading,
+      categories: state => state.category.items
     })
   },
-  created() {
-    this.fetchCategory();
-    this.fetchBrand();
-  },
   async mounted() {
-    await this.fetchProduct();
+    await this.fetchCategory();
   },
   methods: {
-    ...mapActions([
-      "fetchProduct",
-      "createProduct",
-      "fetchCategory",
-      "fetchBrand"
-    ]),
+    ...mapActions(["fetchCategory", "deleteCategory"]),
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
@@ -239,13 +171,11 @@ export default {
     },
     onDelete() {
       this.loadDelete = true;
-      this.$store
-        .dispatch("deleteInvitation", this.selectedItem.id)
-        .then(() => {
-          this.loadDelete = false;
-          this.dialogDelete = false;
-          this.selectedItem = {};
-        });
+      this.deleteCategory(this.selectedItem.category_id).then(() => {
+        this.loadDelete = false;
+        this.dialogDelete = false;
+        this.selectedItem = {};
+      });
     },
     openDialogDetail(item) {
       this.selectedItem = item;

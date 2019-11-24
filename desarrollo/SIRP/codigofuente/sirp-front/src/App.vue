@@ -26,7 +26,7 @@
 import AppDrawer from "@/components/layout/AppDrawer";
 import AppToolbar from "@/components/layout/AppToolbar";
 import PageHeader from "@/components/layout/PageHeader";
-// import AppEvents from  './event'
+
 export default {
   components: {
     AppDrawer,
@@ -47,7 +47,6 @@ export default {
   }),
 
   computed: {},
-
   created() {
     // AppEvents.forEach(item => {
     //   this.$on(item.name, item.callback);
