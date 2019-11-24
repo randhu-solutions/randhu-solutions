@@ -49,4 +49,7 @@ Route::group(['middleware' => ['token']], function () {
     Route::post('/venta/actualizar','SalesController@update');
     Route::post('/venta/eliminar','SalesController@destroy');
 
+    //dashboard
+    Route::post('/dashboard/ventas','DashboardController@sales');
+
 });
