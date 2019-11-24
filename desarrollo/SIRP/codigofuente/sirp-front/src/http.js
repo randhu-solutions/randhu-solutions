@@ -6,7 +6,7 @@ axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem("API_TOKEN") || null;
   if (token) {
-    config.headers.Authorization = `Token ${token}`;
+    config.headers.Authorization = `${token}`;
   }
   return config;
 }, Promise.reject);

@@ -39,45 +39,30 @@
                 </v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="allInvitations"
+                  :items="products"
                   :search="searchInvitation"
                   hide-actions
                   class="elevation-2"
                 >
                   <template v-slot:headers="props">
                     <tr>
-                      <th class="text-xs-left">Nombre y Apellido</th>
-                      <th class="text-xs-left" width="100">DNI</th>
-                      <th class="text-xs-left" width="150">Fecha de Ingreso</th>
-                      <th class="text-xs-left" width="200">Correo</th>
-                      <th
-                        v-if="currentUser.role_name !== 'Residente'"
-                        class="text-xs-left"
-                        width="230"
-                      >
-                        Residente
-                      </th>
+                      <th class="text-xs-left">Nombre</th>
+                      <th class="text-xs-left" width="150">Marca</th>
+                      <th class="text-xs-left" width="100">Código</th>
+                      <th class="text-xs-left" width="100">Precio</th>
                       <th class="text-xs-left" width="80">Acción</th>
                     </tr>
                   </template>
                   <template slot="items" slot-scope="props">
                     <td class="text-xs-left">
-                      {{ props.item.name }}
+                      {{ props.item.product_name }}
                     </td>
-                    <td class="text-xs-left">{{ props.item.dni }}</td>
                     <td class="text-xs-left">
-                      {{
-                        props.item.regular_visitor
-                          ? "Invitado frecuente"
-                          : props.item.invitation_date
-                      }}
+                      {{ props.item.brand.brand_name }}
                     </td>
-                    <td class="text-xs-left">{{ props.item.email }}</td>
-                    <td
-                      v-if="currentUser.role_name !== 'Residente'"
-                      class="text-xs-left"
-                    >
-                      {{ props.item.resident_name }}
+                    <td class="text-xs-left">{{ props.item.product_code }}</td>
+                    <td class="text-xs-left">
+                      {{ `S/. ${props.item.price}` }}
                     </td>
                     <td class="text-xs-right">
                       <v-menu bottom left>
