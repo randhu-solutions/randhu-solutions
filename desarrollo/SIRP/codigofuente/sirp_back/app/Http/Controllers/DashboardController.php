@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Sale;
+use App\SaleDetail;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -17,6 +18,22 @@ class DashboardController extends Controller
         $res = [
             'success' => 1,
             'response' => $sale
+        ];
+
+        return response()->json($res);
+
+    }
+
+    public function salesproducts(Request $request)
+    {
+        $detail = SaleDetail::SelectRaw('year(created_at) year, monthname(created_at) month, MAX(product_description) product')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'desc')
+            ->get();
+
+        $res = [
+            'success' => 1,
+            'response' => $detail
         ];
 
         return response()->json($res);

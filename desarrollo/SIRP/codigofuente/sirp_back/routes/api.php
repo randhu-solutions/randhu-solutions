@@ -51,5 +51,6 @@ Route::group(['middleware' => ['token']], function () {
 
     //dashboard
     Route::post('/dashboard/ventas','DashboardController@sales');
+    Route::post('/dashboard/productos','DashboardController@salesproducts');
 
 });
