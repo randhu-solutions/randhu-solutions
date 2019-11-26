@@ -22,9 +22,6 @@
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-action>
-            <v-icon>dashboard</v-icon>
-          </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
@@ -35,11 +32,24 @@
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-action>
-            <v-icon>portrait</v-icon>
-          </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Invitados</v-list-tile-title>
+            <v-list-tile-title>Productos</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
+          :to="{ name: 'CategoryPage' }"
+          ripple="ripple"
+          rel="noopener"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title>Categoria</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile :to="{ name: 'BrandPage' }" ripple="ripple" rel="noopener">
+          <v-list-tile-content>
+            <v-list-tile-title>Marcas</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

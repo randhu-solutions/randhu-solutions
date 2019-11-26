@@ -2,9 +2,10 @@ import Vue from "vue";
 import Router from "vue-router";
 import LoginPage from "./pages/LoginPage.vue";
 import RegisterPage from "./pages/RegisterPage.vue";
-import GuestPage from "./pages/GuestPage.vue";
 import DashboardPage from "./pages/DashboardPage.vue";
 import ProductPage from "./pages/product/ProductPage.vue";
+import CategoryPage from "./pages/category/CategoryPage.vue";
+import BrandPage from "./pages/brand/BrandPage.vue";
 
 Vue.use(Router);
 
@@ -50,23 +51,32 @@ export default new Router({
       component: RegisterPage
     },
     {
-      path: "/invitados",
-      meta: { breadcrumb: true },
-      name: "GuestPage",
-      component: GuestPage,
-      beforeEnter: requireAuth
-    },
-    {
       path: "/dashboard",
       meta: { breadcrumb: true },
       name: "DashboardPage",
-      component: DashboardPage
+      component: DashboardPage,
+      beforeEnter: requireAuth
     },
     {
-      path: "/productos",
+      path: "/producto",
       meta: { breadcrumb: true },
       name: "ProductPage",
-      component: ProductPage
+      component: ProductPage,
+      beforeEnter: requireAuth
+    },
+    {
+      path: "/categoria",
+      meta: { breadcrumb: true },
+      name: "CategoryPage",
+      component: CategoryPage,
+      beforeEnter: requireAuth
+    },
+    {
+      path: "/marca",
+      meta: { breadcrumb: true },
+      name: "BrandPage",
+      component: BrandPage,
+      beforeEnter: requireAuth
     }
   ]
 });
