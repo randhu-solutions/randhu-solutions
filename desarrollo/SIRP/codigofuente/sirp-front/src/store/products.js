@@ -7,23 +7,24 @@ const products = {
     items: []
   },
   mutations: {
-    setLoading(state, value) {
+    setLoadProducts(state, value) {
       state.loading = value;
     },
-    setNeighbor(state, value) {
+    setProducts(state, value) {
       state.items = value;
     }
   },
   actions: {
     async fetchProduct({ commit }) {
-      commit("setLoading", false);
-      const data = await axios.post(`producto/listar`);
-      console.log("producto results", data);
-      // commit("setNeighbor",);
-      commit("setLoading", true);
+      commit("setLoadProducts", false);
+      const { data } = await axios.post(`producto/listar`);
+      const products = data.response.data;
+      console.log("producto results", products);
+      commit("setProducts", products);
+      commit("setLoadProducts", true);
     },
-    async createProduct({ dispatch }, values) {
-      const result = await axios.post(`producto/crear`, values);
+    async createProduct({ dispatch }, payload) {
+      const result = await axios.post(`producto/crear`, payload);
       // commit('setItems', data.invitations);
       console.log("create product result", result);
       await dispatch("fetchProduct");

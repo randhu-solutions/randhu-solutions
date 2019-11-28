@@ -39,45 +39,30 @@
                 </v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="allInvitations"
+                  :items="products"
                   :search="searchInvitation"
                   hide-actions
                   class="elevation-2"
                 >
                   <template v-slot:headers="props">
                     <tr>
-                      <th class="text-xs-left">Nombre y Apellido</th>
-                      <th class="text-xs-left" width="100">DNI</th>
-                      <th class="text-xs-left" width="150">Fecha de Ingreso</th>
-                      <th class="text-xs-left" width="200">Correo</th>
-                      <th
-                        v-if="currentUser.role_name !== 'Residente'"
-                        class="text-xs-left"
-                        width="230"
-                      >
-                        Residente
-                      </th>
+                      <th class="text-xs-left">Nombre</th>
+                      <th class="text-xs-left" width="150">Marca</th>
+                      <th class="text-xs-left" width="100">Código</th>
+                      <th class="text-xs-left" width="100">Precio</th>
                       <th class="text-xs-left" width="80">Acción</th>
                     </tr>
                   </template>
                   <template slot="items" slot-scope="props">
                     <td class="text-xs-left">
-                      {{ props.item.name }}
+                      {{ props.item.product_name }}
                     </td>
-                    <td class="text-xs-left">{{ props.item.dni }}</td>
                     <td class="text-xs-left">
-                      {{
-                        props.item.regular_visitor
-                          ? "Invitado frecuente"
-                          : props.item.invitation_date
-                      }}
+                      {{ props.item.brand.brand_name }}
                     </td>
-                    <td class="text-xs-left">{{ props.item.email }}</td>
-                    <td
-                      v-if="currentUser.role_name !== 'Residente'"
-                      class="text-xs-left"
-                    >
-                      {{ props.item.resident_name }}
+                    <td class="text-xs-left">{{ props.item.product_code }}</td>
+                    <td class="text-xs-left">
+                      {{ `S/. ${props.item.price}` }}
                     </td>
                     <td class="text-xs-right">
                       <v-menu bottom left>
@@ -91,15 +76,11 @@
                             <v-list-tile-title>Ver detalle</v-list-tile-title>
                           </v-list-tile>
                           <v-list-tile
-                            v-if="currentUser.role_name === 'Residente'"
                             @click="onDialogUpdate(props.item, 'edit')"
                           >
                             <v-list-tile-title>Editar</v-list-tile-title>
                           </v-list-tile>
-                          <v-list-tile
-                            v-if="currentUser.role_name === 'Residente'"
-                            @click="openDialogDelete(props.item)"
-                          >
+                          <v-list-tile @click="openDialogDelete(props.item)">
                             <v-list-tile-title>Eliminar</v-list-tile-title>
                           </v-list-tile>
                         </v-list>
@@ -115,9 +96,9 @@
     </vue-perfect-scrollbar>
 
     <v-dialog v-model="dialogAdd" persistent max-width="600px">
-      <guest-form
+      <product-form
         :type="typeDialog"
-        :guest="selectedItem"
+        :product="selectedItem"
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
@@ -183,7 +164,7 @@
             color="blue darken-1"
             :loading="loadDelete"
             flat
-            @click="onDeleteInvitation()"
+            @click="onDelete()"
             >Sí</v-btn
           >
         </v-card-actions>
@@ -194,12 +175,12 @@
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { mapState, mapActions } from "vuex";
-import GuestForm from "@/components/guest/GuestForm";
+import ProductForm from "@/components/product/ProductForm";
 
 export default {
-  name: "GuestPage",
+  name: "ProductPage",
   components: {
-    GuestForm,
+    ProductForm,
     VuePerfectScrollbar
   },
   data() {
@@ -231,11 +212,20 @@ export default {
       currentUser: state => state.session.currentUser
     })
   },
+  created() {
+    this.fetchCategory();
+    this.fetchBrand();
+  },
   async mounted() {
     await this.fetchProduct();
   },
   methods: {
-    ...mapActions(["fetchProduct"]),
+    ...mapActions([
+      "fetchProduct",
+      "createProduct",
+      "fetchCategory",
+      "fetchBrand"
+    ]),
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
@@ -247,7 +237,7 @@ export default {
       this.selectedItem = item;
       this.dialogDelete = true;
     },
-    onDeleteProduct() {
+    onDelete() {
       this.loadDelete = true;
       this.$store
         .dispatch("deleteInvitation", this.selectedItem.id)
