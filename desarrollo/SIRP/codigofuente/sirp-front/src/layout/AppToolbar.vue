@@ -1,5 +1,6 @@
 <template>
-  <v-toolbar color="primary" fixed dark app>
+  <v-app-bar color="primary" dark app :clipped-left="$vuetify.breakpoint.lgAndUp">
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     <v-toolbar-title class="ml-0 pl-3">
       {{ `${currentUser.profile.first_name} ${currentUser.profile.last_name}` }}
     </v-toolbar-title>
@@ -29,7 +30,7 @@
         </v-list-tile>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 <script>
 import { mapState } from "vuex";
@@ -47,6 +48,7 @@ export default {
         }
       }
     ],
+    drawer: false,
     notifications: []
   }),
   computed: {

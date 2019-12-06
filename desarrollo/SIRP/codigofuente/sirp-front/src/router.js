@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage.vue";
 import ProductPage from "./pages/product/ProductPage.vue";
 import CategoryPage from "./pages/category/CategoryPage.vue";
 import BrandPage from "./pages/brand/BrandPage.vue";
+import SalePage from "./pages/sale/SalePage.vue";
 
 Vue.use(Router);
 
@@ -76,6 +77,13 @@ export default new Router({
       meta: { breadcrumb: true },
       name: "BrandPage",
       component: BrandPage,
+      beforeEnter: requireAuth
+    },
+    {
+      path: "/venta",
+      meta: { breadcrumb: true },
+      name: "SalePage",
+      component: SalePage,
       beforeEnter: requireAuth
     }
   ]
