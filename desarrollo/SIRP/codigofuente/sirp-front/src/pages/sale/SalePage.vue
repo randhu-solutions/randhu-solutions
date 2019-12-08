@@ -6,13 +6,13 @@
     >
       <v-container fluid>
         <v-row>
-          <v-toolbar card dense color="transparent">
-            <v-toolbar-title><h4>Venta</h4></v-toolbar-title>
+          <v-col cols="12">
+            <h4>Ventas</h4>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
               Agregar producto
             </v-btn>
-          </v-toolbar>
+          </v-col>
           <template v-if="!loading">
             <div class="text-xs-center">
               <v-progress-circular

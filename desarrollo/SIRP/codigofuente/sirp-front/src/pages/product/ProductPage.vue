@@ -67,17 +67,15 @@
                         </v-btn>
                       </template>
                       <v-list>
-                        <v-list-tile @click="openDialogDetail(props.item)">
-                          <v-list-tile-title>Ver detalle</v-list-tile-title>
-                        </v-list-tile>
-                        <v-list-tile
-                          @click="onDialogUpdate(props.item, 'edit')"
-                        >
-                          <v-list-tile-title>Editar</v-list-tile-title>
-                        </v-list-tile>
-                        <v-list-tile @click="openDialogDelete(props.item)">
-                          <v-list-tile-title>Eliminar</v-list-tile-title>
-                        </v-list-tile>
+                        <v-list-item @click="openDialogDetail(item)">
+                          <v-list-item-title>Ver detalle</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="onDialogUpdate(item, 'edit')">
+                          <v-list-item-title>Editar</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="openDialogDelete(item)">
+                          <v-list-item-title>Eliminar</v-list-item-title>
+                        </v-list-item>
                       </v-list>
                     </v-menu>
                   </template>
