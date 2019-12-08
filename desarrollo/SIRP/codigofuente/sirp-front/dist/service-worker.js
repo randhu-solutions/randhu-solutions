@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.574843596531009850d0c4eebb46dd54.js"
+  "/precache-manifest.897303b5b5f81b6db0c0459d5f6a3fdc.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "my-vecindad"});
