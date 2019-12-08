@@ -84,4 +84,39 @@ class UserController extends Controller
         }
         return response()->json($res, $this->status);
     }
+
+    public function list(Request $request)
+    {
+        $request->limit? $p = $request->limit : $p = 10;
+        $request->order? $order = $request->order : $order = 'desc';
+
+        $user = TokenController::getUserbyToken($request->header('authorization'));
+        $usr = User::find($user->user_id);
+
+        if($usr->rol == 'Admin')
+        {
+            $users = User::with('profile')
+                ->orderBy('created_at',$order)
+                ->paginate($p);
+
+            $res = [
+                'success' => 1,
+                'response' => $users
+            ];
+        }
+        else
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Solo administradores pueden ver lista de usuarios'
+            ];
+            $this->status = 500;
+        }
+        return response()->json($res, $this->status);
+    }
+
+    public function delete(Request $request)
+    {
+
+    }
 }
