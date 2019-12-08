@@ -4,15 +4,15 @@
       class="drawer-menu--scroll"
       :settings="scrollSettings"
     >
-      <v-container grid-list-xl fluid>
+      <v-container fluid>
         <v-row>
-          <v-col cols="12">
-            <h4>Mis Marcas</h4>
+          <v-toolbar card dense color="transparent">
+            <v-toolbar-title><h4>Venta</h4></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
-              Agregar marca
+              Agregar producto
             </v-btn>
-          </v-col>
+          </v-toolbar>
           <template v-if="!loading">
             <div class="text-xs-center">
               <v-progress-circular
@@ -39,46 +39,53 @@
                 </v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="brands"
+                  :items="products"
                   :search="searchInvitation"
-                  item-key="id"
-                  hide-default-footer
-                  hide-default-header
+                  hide-actions
                   class="elevation-2"
                 >
-                  <template v-slot:headers="{ props: { headers } }">
-                    <thead>
-                      <tr>
-                        <th v-for="item in headers" :key="item.value">
-                          <span
-                            :key="`span_${item.value}`"
-                            v-html="item.text"
-                          ></span>
-                        </th>
-                      </tr>
-                    </thead>
+                  <template v-slot:headers="props">
+                    <tr>
+                      <th class="text-xs-left">Nombre</th>
+                      <th class="text-xs-left" width="150">Marca</th>
+                      <th class="text-xs-left" width="100">Código</th>
+                      <th class="text-xs-left" width="100">Precio</th>
+                      <th class="text-xs-left" width="80">Acción</th>
+                    </tr>
                   </template>
-                  <template v-slot:item.action="{ item }">
-                    <v-menu bottom left>
-                      <template v-slot:activator="{ on }">
-                        <v-btn icon v-on="on">
-                          <v-icon>more_vert</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-tile @click="openDialogDetail(props.item)">
-                          <v-list-tile-title>Ver detalle</v-list-tile-title>
-                        </v-list-tile>
-                        <v-list-tile
-                          @click="onDialogUpdate(props.item, 'edit')"
-                        >
-                          <v-list-tile-title>Editar</v-list-tile-title>
-                        </v-list-tile>
-                        <v-list-tile @click="openDialogDelete(props.item)">
-                          <v-list-tile-title>Eliminar</v-list-tile-title>
-                        </v-list-tile>
-                      </v-list>
-                    </v-menu>
+                  <template slot="items" slot-scope="props">
+                    <td class="text-xs-left">
+                      {{ props.item.product_name }}
+                    </td>
+                    <td class="text-xs-left">
+                      {{ props.item.brand.brand_name }}
+                    </td>
+                    <td class="text-xs-left">{{ props.item.product_code }}</td>
+                    <td class="text-xs-left">
+                      {{ `S/. ${props.item.price}` }}
+                    </td>
+                    <td class="text-xs-right">
+                      <v-menu bottom left>
+                        <template v-slot:activator="{ on }">
+                          <v-btn icon v-on="on">
+                            <v-icon>more_vert</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-list>
+                          <v-list-tile @click="openDialogDetail(props.item)">
+                            <v-list-tile-title>Ver detalle</v-list-tile-title>
+                          </v-list-tile>
+                          <v-list-tile
+                            @click="onDialogUpdate(props.item, 'edit')"
+                          >
+                            <v-list-tile-title>Editar</v-list-tile-title>
+                          </v-list-tile>
+                          <v-list-tile @click="openDialogDelete(props.item)">
+                            <v-list-tile-title>Eliminar</v-list-tile-title>
+                          </v-list-tile>
+                        </v-list>
+                      </v-menu>
+                    </td>
                   </template>
                 </v-data-table>
               </v-card>
@@ -89,9 +96,9 @@
     </vue-perfect-scrollbar>
 
     <v-dialog v-model="dialogAdd" persistent max-width="600px">
-      <brand-form
+      <product-form
         :type="typeDialog"
-        :brand="selectedItem"
+        :product="selectedItem"
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
@@ -142,14 +149,12 @@
 
     <v-dialog v-model="dialogDelete" persistent max-width="450px">
       <v-card v-if="dialogDelete">
-        <v-card-title class="pb-0">
+        <v-card-title>
           <span class="subheading">Eliminar Invitado</span>
         </v-card-title>
         <v-card-text>
           <div>
-            ¿Estás seguro que deseas eliminar a
-            <b>{{ selectedItem.brand_name }}</b
-            >?
+            ¿Estás seguro que deseas eliminar a {{ selectedItem.name }}?
           </div>
         </v-card-text>
         <v-card-actions>
@@ -170,12 +175,12 @@
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { mapState, mapActions } from "vuex";
-import BrandForm from "@/components/brand/BrandForm";
+import ProductForm from "@/components/product/ProductForm";
 
 export default {
-  name: "BrandPage",
+  name: "SalePage",
   components: {
-    BrandForm,
+    ProductForm,
     VuePerfectScrollbar
   },
   data() {
@@ -190,20 +195,37 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
-      headers: [{ text: "Nombre", value: "brand_name" }, { text: "Acción", value: "action" }]
+      relation: ["Amigo", "Familiar", "Vecino"],
+      headers: [
+        { text: "Nombre y Apellido", value: "name" },
+        { text: "DNI", value: "dni" },
+        { text: "Fecha de Ingreso" },
+        { text: "Correo", value: "email" },
+        { text: "Acción" }
+      ]
     };
   },
   computed: {
     ...mapState({
-      loading: state => state.brand.loading,
-      brands: state => state.brand.items
+      loading: state => state.products.loading,
+      products: state => state.products.items,
+      currentUser: state => state.session.currentUser
     })
   },
+  created() {
+    this.fetchCategory();
+    this.fetchBrand();
+  },
   async mounted() {
-    await this.fetchBrand();
+    await this.fetchProduct();
   },
   methods: {
-    ...mapActions(["fetchBrand", "deleteBrand"]),
+    ...mapActions([
+      "fetchProduct",
+      "createProduct",
+      "fetchCategory",
+      "fetchBrand"
+    ]),
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
@@ -217,11 +239,13 @@ export default {
     },
     onDelete() {
       this.loadDelete = true;
-      this.deleteBrand(this.selectedItem.brand_id).then(() => {
-        this.loadDelete = false;
-        this.dialogDelete = false;
-        this.selectedItem = {};
-      });
+      this.$store
+        .dispatch("deleteInvitation", this.selectedItem.id)
+        .then(() => {
+          this.loadDelete = false;
+          this.dialogDelete = false;
+          this.selectedItem = {};
+        });
     },
     openDialogDetail(item) {
       this.selectedItem = item;
