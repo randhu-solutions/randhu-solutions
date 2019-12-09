@@ -10,87 +10,83 @@
             <h4>Ventas</h4>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
-              Agregar producto
+              Agregar venta
             </v-btn>
           </v-col>
-          <template v-if="!loading">
-            <div class="text-xs-center">
-              <v-progress-circular
-                :size="50"
-                color="primary"
-                indeterminate
-              ></v-progress-circular>
-            </div>
-          </template>
-          <template v-else>
-            <v-col cols="12">
-              <v-card>
-                <v-card-title>
-                  <!-- h4 class="subheading mb-2">Invitados frecuentes</!-- -->
-                  <v-spacer></v-spacer>
-                  <v-text-field
-                    v-model="searchInvitation"
-                    append-icon="search"
-                    label="Buscar por Nombre"
-                    single-line
-                    hide-details
-                    class="mt-0 pt-0"
-                  ></v-text-field>
-                </v-card-title>
-                <v-data-table
-                  :headers="headers"
-                  :items="products"
-                  :search="searchInvitation"
-                  hide-actions
-                  class="elevation-2"
-                >
-                  <template v-slot:headers="props">
-                    <tr>
-                      <th class="text-xs-left">Nombre</th>
-                      <th class="text-xs-left" width="150">Marca</th>
-                      <th class="text-xs-left" width="100">Código</th>
-                      <th class="text-xs-left" width="100">Precio</th>
-                      <th class="text-xs-left" width="80">Acción</th>
-                    </tr>
-                  </template>
-                  <template slot="items" slot-scope="props">
-                    <td class="text-xs-left">
-                      {{ props.item.product_name }}
-                    </td>
-                    <td class="text-xs-left">
-                      {{ props.item.brand.brand_name }}
-                    </td>
-                    <td class="text-xs-left">{{ props.item.product_code }}</td>
-                    <td class="text-xs-left">
-                      {{ `S/. ${props.item.price}` }}
-                    </td>
-                    <td class="text-xs-right">
-                      <v-menu bottom left>
-                        <template v-slot:activator="{ on }">
-                          <v-btn icon v-on="on">
-                            <v-icon>more_vert</v-icon>
-                          </v-btn>
-                        </template>
-                        <v-list>
-                          <v-list-tile @click="openDialogDetail(props.item)">
-                            <v-list-tile-title>Ver detalle</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile
-                            @click="onDialogUpdate(props.item, 'edit')"
-                          >
-                            <v-list-tile-title>Editar</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile @click="openDialogDelete(props.item)">
-                            <v-list-tile-title>Eliminar</v-list-tile-title>
-                          </v-list-tile>
-                        </v-list>
-                      </v-menu>
-                    </td>
-                  </template>
-                </v-data-table>
-              </v-card>
-            </v-col>
-          </template>
+        </v-row>
+        <v-row>
+          <v-col cols="8">
+            <v-card>
+              <v-card-title>
+                <v-row>
+                  <v-col cols="12" class="pt-0">
+                    <v-autocomplete
+                      v-model="selectedSearch"
+                      :loading="loadSearch"
+                      :items="itemsListSearch"
+                      :search-input.sync="inputSearch"
+                      item-text="product_name"
+                      item-value="product_id"
+                      hide-no-data
+                      hide-details
+                      clearable
+                      outlined
+                      return-object
+                      class="mt-0"
+                      placeholder="Ingresa tu búsqueda"
+                      @click:clear="clearSearch"
+                      @change="onChangeSelect"
+                    ></v-autocomplete>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-data-table
+                      :headers="headers"
+                      :items="listProduct"
+                      item-key="id"
+                      hide-default-footer
+                      class="elevation-2"
+                    >
+                      <template v-slot:headers="{ props: { headers } }">
+                        <thead>
+                          <tr>
+                            <th v-for="item in headers" :key="item.value">
+                              <span :key="`span_${item.value}`">{{
+                                item.text
+                              }}</span>
+                            </th>
+                          </tr>
+                        </thead>
+                      </template>
+                      <template v-slot:item.action="{ item }">
+                        <v-menu bottom left>
+                          <template v-slot:activator="{ on }">
+                            <v-btn icon v-on="on">
+                              <v-icon>more_vert</v-icon>
+                            </v-btn>
+                          </template>
+                          <v-list>
+                            <v-list-item @click="deleteListProduct(item)">
+                              <v-list-item-title>Eliminar</v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                      </template>
+                    </v-data-table>
+                  </v-col>
+                </v-row>
+              </v-card-title>
+            </v-card>
+          </v-col>
+          <v-col cols="4">
+            <v-card>
+              <v-card-title>
+                <h5 class="d-block w-100">Total de la venta</h5>
+              </v-card-title>
+              <v-card-title class="pt-0">
+                <p class="mb-0">Precio total: <b>{{ priceTotal }}</b></p>
+              </v-card-title>
+            </v-card>
+          </v-col>
         </v-row>
       </v-container>
     </vue-perfect-scrollbar>
@@ -173,6 +169,7 @@
   </div>
 </template>
 <script>
+import { isEmpty, debounce } from "lodash";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { mapState, mapActions } from "vuex";
 import ProductForm from "@/components/product/ProductForm";
@@ -188,6 +185,10 @@ export default {
       scrollSettings: {
         maxScrollbarLength: 160
       },
+      selectedSearch: null,
+      loadSearch: false,
+      itemsListSearch: [],
+      inputSearch: null,
       searchInvitation: "",
       dialogDelete: false,
       dialogDetail: false,
@@ -195,22 +196,39 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
-      relation: ["Amigo", "Familiar", "Vecino"],
       headers: [
-        { text: "Nombre y Apellido", value: "name" },
-        { text: "DNI", value: "dni" },
-        { text: "Fecha de Ingreso" },
-        { text: "Correo", value: "email" },
-        { text: "Acción" }
-      ]
+        { text: "Nombre", value: "product_name" },
+        { text: "Marca", value: "brand.brand_name" },
+        { text: "Código", value: "product_code" },
+        { text: "Precio", value: "price" },
+        { text: "Acción", value: "action" }
+      ],
+      listProduct: []
     };
   },
   computed: {
     ...mapState({
-      loading: state => state.products.loading,
-      products: state => state.products.items,
       currentUser: state => state.session.currentUser
-    })
+    }),
+    priceTotal() {
+      if (this.listProduct.length) {
+        let count = 0.00;
+        this.listProduct.forEach(e => {
+          count += count + parseFloat(`${e.price}`)
+        });
+        return count;
+      }
+      return 0;
+    }
+  },
+  watch: {
+    inputSearch: debounce(function(newVal) {
+      if (!isEmpty(newVal)) {
+        this.getSearchList();
+      } else {
+        this.itemsListSearch = [];
+      }
+    }, 100)
   },
   created() {
     this.fetchCategory();
@@ -226,6 +244,37 @@ export default {
       "fetchCategory",
       "fetchBrand"
     ]),
+    onChangeSelect(event) {
+      if (!event) {
+        return false;
+      }
+      this.listProduct.push(event);
+      console.log(event);
+    },
+    clearSearch() {
+      // this.loadSearch = false;
+      this.inputSearch = null;
+      this.itemsListSearch = [];
+    },
+    deleteListProduct(product) {
+      this.listProduct.filter(item => item.product_id !== product.product_id);
+    },
+    getSearchList() {
+      if (isEmpty(this.inputSearch)) {
+        return false;
+      }
+      this.loadSearch = true;
+      const payload = {
+        search: this.inputSearch
+      };
+      this.axios
+        .post("producto/buscar", payload)
+        .then(snap => {
+          this.itemsListSearch = snap.data.response;
+          this.loadSearch = false;
+        })
+        .catch(error => console.log(error));
+    },
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
