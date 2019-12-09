@@ -5,14 +5,14 @@
       :settings="scrollSettings"
     >
       <v-container grid-list-xl fluid>
-        <v-layout row wrap>
-          <v-toolbar card dense color="transparent">
-            <v-toolbar-title><h4>Mis Marcas</h4></v-toolbar-title>
+        <v-row>
+          <v-col cols="12">
+            <h4>Mis Marcas</h4>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
               Agregar marca
             </v-btn>
-          </v-toolbar>
+          </v-col>
           <template v-if="!loading">
             <div class="text-xs-center">
               <v-progress-circular
@@ -23,7 +23,7 @@
             </div>
           </template>
           <template v-else>
-            <v-flex xs12>
+            <v-col cols="12">
               <v-card>
                 <v-card-title>
                   <!-- h4 class="subheading mb-2">Invitados frecuentes</!-- -->
@@ -41,47 +41,48 @@
                   :headers="headers"
                   :items="brands"
                   :search="searchInvitation"
-                  hide-actions
+                  item-key="id"
+                  hide-default-footer
+                  hide-default-header
                   class="elevation-2"
                 >
-                  <template v-slot:headers="props">
-                    <tr>
-                      <th class="text-xs-left">Nombre</th>
-                      <th class="text-xs-left" width="80">Acción</th>
-                    </tr>
+                  <template v-slot:headers="{ props: { headers } }">
+                    <thead>
+                      <tr>
+                        <th v-for="item in headers" :key="item.value">
+                          <span
+                            :key="`span_${item.value}`"
+                            v-html="item.text"
+                          ></span>
+                        </th>
+                      </tr>
+                    </thead>
                   </template>
-                  <template slot="items" slot-scope="props">
-                    <td class="text-xs-left">
-                      {{ props.item.brand_name }}
-                    </td>
-                    <td class="text-xs-right">
-                      <v-menu bottom left>
-                        <template v-slot:activator="{ on }">
-                          <v-btn icon v-on="on">
-                            <v-icon>more_vert</v-icon>
-                          </v-btn>
-                        </template>
-                        <v-list>
-                          <v-list-tile @click="openDialogDetail(props.item)">
-                            <v-list-tile-title>Ver detalle</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile
-                            @click="onDialogUpdate(props.item, 'edit')"
-                          >
-                            <v-list-tile-title>Editar</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile @click="openDialogDelete(props.item)">
-                            <v-list-tile-title>Eliminar</v-list-tile-title>
-                          </v-list-tile>
-                        </v-list>
-                      </v-menu>
-                    </td>
+                  <template v-slot:item.action="{ item }">
+                    <v-menu bottom left>
+                      <template v-slot:activator="{ on }">
+                        <v-btn icon v-on="on">
+                          <v-icon>more_vert</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list>
+                        <v-list-item @click="openDialogDetail(item)">
+                          <v-list-item-title>Ver detalle</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="onDialogUpdate(item, 'edit')">
+                          <v-list-item-title>Editar</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="openDialogDelete(item)">
+                          <v-list-item-title>Eliminar</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
                   </template>
                 </v-data-table>
               </v-card>
-            </v-flex>
+            </v-col>
           </template>
-        </v-layout>
+        </v-row>
       </v-container>
     </vue-perfect-scrollbar>
 
@@ -187,7 +188,10 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
-      headers: [{ text: "Nombre", value: "brand_name" }, { text: "Acción" }]
+      headers: [
+        { text: "Nombre", value: "brand_name" },
+        { text: "Acción", value: "action" }
+      ]
     };
   },
   computed: {

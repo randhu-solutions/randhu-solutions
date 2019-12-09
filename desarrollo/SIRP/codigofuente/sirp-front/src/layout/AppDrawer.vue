@@ -2,56 +2,62 @@
   <v-navigation-drawer
     id="appDrawer"
     v-model="drawer"
-    :mini-variant.sync="mini"
+    :clipped="$vuetify.breakpoint.lgAndUp"
     fixed
-    :dark="$vuetify.dark"
     app
     width="200"
   >
-    <v-toolbar color="primary darken-1" dark>
-      <h3>Randhu Solutions</h3>
-    </v-toolbar>
     <vue-perfect-scrollbar
       class="drawer-menu--scroll"
       :settings="scrollSettings"
     >
       <v-list dense expand>
         <!--top-level link-->
-        <v-list-tile
+        <v-list-item 
           :to="{ name: 'DashboardPage' }"
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-content>
-            <v-list-tile-title>Dashboard</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item >
 
-        <v-list-tile
+        <v-list-item
+          :to="{ name: 'SalePage' }"
+          ripple="ripple"
+          rel="noopener"
+        >
+          <v-list-item-content>
+            <v-list-item-title>Ventas</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item
           :to="{ name: 'ProductPage' }"
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-content>
-            <v-list-tile-title>Productos</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          <v-list-item-content>
+            <v-list-item-title>Productos</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-        <v-list-tile
+        <v-list-item
           :to="{ name: 'CategoryPage' }"
           ripple="ripple"
           rel="noopener"
         >
-          <v-list-tile-content>
-            <v-list-tile-title>Categoria</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          <v-list-item-content>
+            <v-list-item-title>Categoria</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-        <v-list-tile :to="{ name: 'BrandPage' }" ripple="ripple" rel="noopener">
-          <v-list-tile-content>
-            <v-list-tile-title>Marcas</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item :to="{ name: 'BrandPage' }" ripple="ripple" rel="noopener">
+          <v-list-item-content>
+            <v-list-item-title>Marcas</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </vue-perfect-scrollbar>
   </v-navigation-drawer>
