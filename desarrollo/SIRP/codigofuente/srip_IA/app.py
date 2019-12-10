@@ -23,5 +23,10 @@ def get_products_recommedation(product_id):
         cosine_similarities = linear_kernel(tfidf_matrix, tfidf_matrix) 
         results = {}
 
+        for idx, row in ds.iterrows():
+            similar_indices = cosine_similarities[idx].argsort()[:-100:-1] 
+            similar_items = [(cosine_similarities[idx][i], ds['product_id'][i]) for i in similar_indices] 
+            results[row['product_id']] = similar_items[1:]
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
