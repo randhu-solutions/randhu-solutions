@@ -17,7 +17,7 @@
 
 ## Documento de Análisis  
 ### 1.  Paquetes de Análisis del Negocio
-![](i101.png)
+![](SIRPDA/i101.png)
  
 Cada paquete corresponde a un proceso de negocio, Los 3 paquetes básicos que se muestran en el diagrama son los siguientes:  
 - Gestión de Productos.
@@ -29,25 +29,23 @@ Finalmente se tiene un paquete de seguridad, el cual contendrá los CUS que prov
 #### 2.1 Paquetes de Análisis
 •   Paquete del proceso del negocio: 
 
-![](i201.png)
+![](SIRPDA/i201.png)
  
-
-
 •   Paquetes para los casos de uso análisis: 
-![](i202.png)
+![](SIRPDA/i202.png)
  
 
 ####Clases de Análisis
 ##### 2.1.1   Clases Entidad
  
-![](i203.png)
+![](SIRPDA/i203.png)
 
 ##### 2.1.2   Clases Interfaz
-![](i204.png)
+![](SIRPDA/i204.png)
  
 
 ##### 2.1.3   Clases Control
-![](i205.png)
+![](SIRPDA/i205.png)
  
 #### 2.2 Diagrama de Clases Análisis
 ##### 2.2.1   Caso de Uso: Registrar Marca
@@ -83,11 +81,11 @@ Finalmente se tiene un paquete de seguridad, el cual contendrá los CUS que prov
 3.  No debe permitir registrar si está vacío el input de marca o si hay solo espacios en blanco
 
 ###### 2.2.1.1 Realización de Caso de Uso Análisis
-![](i206.png)
+![](SIRPDA/i206.png)
 
 ###### 2.2.1.2 Diagrama de secuencia y Flujo de Eventos
 •   Diagrama de Secuencia
-![](i207.png)
+![](SIRPDA/i207.png)
 
 •   Flujo de eventos  
     El cajero entrara en la interfaz de Registrar Marca (1), el sistema procederá a buscar la lista de marcas registrados(2) mediante el controlador ConexionBD que solicitara a la base de datos la lista de marcas (3), recibirá la lista (4) y las mostrar en la interfaz de registrar marcas (5), el cajero ingresaría los datos de la nueva marca a registrar (6), el sistema pasara a validar que no sea repetida (7),  se generara la creación de marca (8) mediante el controlador ConexionBD (9) para añadirlo a la base de datos (10), que retornara la confirmación de la creación (11), para mostrarla en la interfaz de usuario (12).
@@ -123,12 +121,12 @@ Post-condición: El sistema debe tener actualizada la lista de marcas para un us
 14. No debe permitir actualizar si está vacío el input de marca o si hay solo espacios en blanco
 
 ###### 2.2.2.1 Realización de Caso de Uso Análisis
-![](i208.png)
+![](SIRPDA/i208.png)
 
 ###### 2.2.2.2 Diagramas de Secuencia y Flujo de eventos  
 
 •   Diagrama de Secuencia
-![](i209.png)
+![](SIRPDA/i209.png)
 
 •   Flujo de eventos
 
@@ -166,7 +164,7 @@ El cajero entrara en la interfaz de Editar Marca (1), el sistema procederá a bu
 14. No debe permitir registrar si está vacío el input de marca o si hay solo espacios en blanco
 
 ###### 2.2.3.1 Realización de Caso de Uso Análisis
-![](i210.png)
+![](SIRPDA/i210.png)
 
  
 
@@ -174,7 +172,7 @@ El cajero entrara en la interfaz de Editar Marca (1), el sistema procederá a bu
 
 ###### 2.2.3.2 Diagrama de secuencia y flujo de eventos
 •   Diagrama de Secuencia
-![](i211.png)
+![](SIRPDA/i211.png)
 
 •   Flujo de eventos
 
@@ -210,11 +208,11 @@ Flujo Alterno:
 13. No debe permitir registrar si está vacío algún campo vacío del formulario o si hay solo espacios en blanco 
 
 ###### 2.2.4.1 Realización de Caso de Uso Análisis
-![](i212.png)
+![](SIRPDA/i212.png)
  
 ###### 2.2.4.2 Diagramas de Interacción y flujo de eventos
  
-![](i213.png)
+![](SIRPDA/i213.png)
 
 
 
@@ -224,21 +222,21 @@ El cajero entrara en la interfaz de Registrar Producto (1), el sistema proceder�
 ### 3   Proceso del Negocio: Gestión de Ventas
 #### 3.1 Paquetes de Análisis
 - Paquete del proceso de negocio  
-![](i301.png)
+![](SIRPDA/i301.png)
  
 - Paquetes para los casos de uso de análisis  
-![](i302.png)
+![](SIRPDA/i302.png)
 
  
 #### 3.2 Clases de Análisis
 ##### 3.2.1   Clases Entidad
-![](i303.png)
+![](SIRPDA/i303.png)
  
 ##### 3.2.2   Clases Interfaz
-![](i304.png)
+![](SIRPDA/i304.png)
  
 ##### 3.2.3   Clases Control
-![](i305.png)
+![](SIRPDA/i305.png)
  
 #### 3.3 Diagrama de Clases Análisis
 
@@ -266,9 +264,9 @@ Requerimientos Especiales:
 6.  El diseño de la interfaz debe ser legible para el usuario. 
 
 ###### 3.3.1.1 Realización de Caso de Uso Análisis
-![](i306.png)
+![](SIRPDA/i306.png)
  
 ###### 3.3.1.2 Diagrama de Secuencia y flujo de eventos
-![](i307.png)
+![](SIRPDA/i307.png)
  
 El cajero entrara en la interfaz de mostrar recomendaciones una vez tenga productos seleccionados para vender y haya pulsado el botón de mostrar recomendaciones (1), el sistema procederá a buscar la lista de productos recomendados (2), mediante el controlador ConexionBD que solicitara a base de datos la lista de productos recomendados (3), recibirá la lista (4), y pintara una lista en la interfaz mostrando los productos que se recomiendan vender al cajero u administrador.

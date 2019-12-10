@@ -43,7 +43,6 @@
                   :search="searchInvitation"
                   item-key="id"
                   hide-default-footer
-                  hide-default-header
                   class="elevation-2"
                 >
                   <template v-slot:headers="{ props: { headers } }">
@@ -79,6 +78,13 @@
                     </v-menu>
                   </template>
                 </v-data-table>
+                <v-pagination
+                  v-model="currentPage"
+                  class="mt-3"
+                  :length="totalPages"
+                  :total-visible="10"
+                  @input="onChangePagination"
+                ></v-pagination>
               </v-card>
             </v-col>
           </template>
@@ -93,49 +99,6 @@
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
-    </v-dialog>
-
-    <v-dialog v-model="dialogDetail" persistent max-width="450px">
-      <v-card v-if="dialogDetail">
-        <v-card-title>
-          <span class="subheading text-uppercase">{{ selectedItem.name }}</span>
-          <span v-if="selectedItem.dni" class="ml-2 body-1"
-            >, DNI: <b>{{ selectedItem.dni }}</b></span
-          >
-        </v-card-title>
-        <v-card-text class="pt-0">
-          <v-list two-line class="pa-0">
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">mail</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ selectedItem.email }}</v-list-tile-title>
-                <v-list-tile-sub-title>Email</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">date_range</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{
-                  selectedItem.regular_visitor
-                    ? "Invitado frecuente"
-                    : selectedItem.invitation_date
-                }}</v-list-tile-title>
-                <v-list-tile-sub-title>Fecha de llegada</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialogDetail = false"
-            >Cerrar</v-btn
-          >
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <v-dialog v-model="dialogDelete" persistent max-width="450px">
@@ -188,6 +151,7 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
+      currentPage: 1,
       headers: [
         { text: "Nombre", value: "brand_name" },
         { text: "Acción", value: "action" }
@@ -197,14 +161,18 @@ export default {
   computed: {
     ...mapState({
       loading: state => state.brand.loading,
-      brands: state => state.brand.items
+      brands: state => state.brand.items,
+      totalPages: state => state.brand.totalPages
     })
   },
   async mounted() {
-    await this.fetchBrand();
+    await this.fetchBrand(this.currentPage);
   },
   methods: {
     ...mapActions(["fetchBrand", "deleteBrand"]),
+    async onChangePagination(val) {
+      await this.fetchBrand(val);
+    },
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
