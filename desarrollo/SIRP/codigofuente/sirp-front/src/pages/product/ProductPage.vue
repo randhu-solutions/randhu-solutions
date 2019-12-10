@@ -4,15 +4,17 @@
       class="drawer-menu--scroll"
       :settings="scrollSettings"
     >
-      <v-container grid-list-xl fluid>
-        <v-layout row wrap>
-          <v-toolbar card dense color="transparent">
-            <v-toolbar-title><h4>Mis Productos</h4></v-toolbar-title>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12">
+            <h4>Mis Productos</h4>
             <v-spacer></v-spacer>
             <v-btn small color="primary" @click="onDialogUpdate(null, 'new')">
               Agregar producto
             </v-btn>
-          </v-toolbar>
+          </v-col>
+        </v-row>
+        <v-row>
           <template v-if="!loading">
             <div class="text-xs-center">
               <v-progress-circular
@@ -23,10 +25,9 @@
             </div>
           </template>
           <template v-else>
-            <v-flex xs12>
+            <v-col cols="12">
               <v-card>
                 <v-card-title>
-                  <!-- h4 class="subheading mb-2">Invitados frecuentes</!-- -->
                   <v-spacer></v-spacer>
                   <v-text-field
                     v-model="searchInvitation"
@@ -39,85 +40,57 @@
                 </v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="allInvitations"
+                  :items="products"
                   :search="searchInvitation"
-                  hide-actions
+                  item-key="id"
+                  hide-default-footer
+                  hide-default-header
                   class="elevation-2"
                 >
-                  <template v-slot:headers="props">
-                    <tr>
-                      <th class="text-xs-left">Nombre y Apellido</th>
-                      <th class="text-xs-left" width="100">DNI</th>
-                      <th class="text-xs-left" width="150">Fecha de Ingreso</th>
-                      <th class="text-xs-left" width="200">Correo</th>
-                      <th
-                        v-if="currentUser.role_name !== 'Residente'"
-                        class="text-xs-left"
-                        width="230"
-                      >
-                        Residente
-                      </th>
-                      <th class="text-xs-left" width="80">Acción</th>
-                    </tr>
+                  <template v-slot:headers="{ props: { headers } }">
+                    <thead>
+                      <tr>
+                        <th v-for="item in headers" :key="item.value">
+                          <span
+                            :key="`span_${item.value}`"
+                            v-html="item.text"
+                          ></span>
+                        </th>
+                      </tr>
+                    </thead>
                   </template>
-                  <template slot="items" slot-scope="props">
-                    <td class="text-xs-left">
-                      {{ props.item.name }}
-                    </td>
-                    <td class="text-xs-left">{{ props.item.dni }}</td>
-                    <td class="text-xs-left">
-                      {{
-                        props.item.regular_visitor
-                          ? "Invitado frecuente"
-                          : props.item.invitation_date
-                      }}
-                    </td>
-                    <td class="text-xs-left">{{ props.item.email }}</td>
-                    <td
-                      v-if="currentUser.role_name !== 'Residente'"
-                      class="text-xs-left"
-                    >
-                      {{ props.item.resident_name }}
-                    </td>
-                    <td class="text-xs-right">
-                      <v-menu bottom left>
-                        <template v-slot:activator="{ on }">
-                          <v-btn icon v-on="on">
-                            <v-icon>more_vert</v-icon>
-                          </v-btn>
-                        </template>
-                        <v-list>
-                          <v-list-tile @click="openDialogDetail(props.item)">
-                            <v-list-tile-title>Ver detalle</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile
-                            v-if="currentUser.role_name === 'Residente'"
-                            @click="onDialogUpdate(props.item, 'edit')"
-                          >
-                            <v-list-tile-title>Editar</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile
-                            v-if="currentUser.role_name === 'Residente'"
-                            @click="openDialogDelete(props.item)"
-                          >
-                            <v-list-tile-title>Eliminar</v-list-tile-title>
-                          </v-list-tile>
-                        </v-list>
-                      </v-menu>
-                    </td>
+                  <template v-slot:item.action="{ item }">
+                    <v-menu bottom left>
+                      <template v-slot:activator="{ on }">
+                        <v-btn icon v-on="on">
+                          <v-icon>more_vert</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list>
+                        <v-list-item @click="openDialogDetail(item)">
+                          <v-list-item-title>Ver detalle</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="onDialogUpdate(item, 'edit')">
+                          <v-list-item-title>Editar</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="openDialogDelete(item)">
+                          <v-list-item-title>Eliminar</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
                   </template>
                 </v-data-table>
               </v-card>
-            </v-flex>
+            </v-col>
           </template>
-        </v-layout>
+        </v-row>
       </v-container>
     </vue-perfect-scrollbar>
 
     <v-dialog v-model="dialogAdd" persistent max-width="600px">
-      <guest-form
+      <product-form
         :type="typeDialog"
-        :guest="selectedItem"
+        :product="selectedItem"
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
@@ -183,7 +156,7 @@
             color="blue darken-1"
             :loading="loadDelete"
             flat
-            @click="onDeleteInvitation()"
+            @click="onDelete()"
             >Sí</v-btn
           >
         </v-card-actions>
@@ -194,12 +167,12 @@
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { mapState, mapActions } from "vuex";
-import GuestForm from "@/components/guest/GuestForm";
+import ProductForm from "@/components/product/ProductForm";
 
 export default {
-  name: "GuestPage",
+  name: "ProductPage",
   components: {
-    GuestForm,
+    ProductForm,
     VuePerfectScrollbar
   },
   data() {
@@ -214,13 +187,12 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
-      relation: ["Amigo", "Familiar", "Vecino"],
       headers: [
-        { text: "Nombre y Apellido", value: "name" },
-        { text: "DNI", value: "dni" },
-        { text: "Fecha de Ingreso" },
-        { text: "Correo", value: "email" },
-        { text: "Acción" }
+        { text: "Nombre", value: "product_name" },
+        { text: "Marca", value: "brand.brand_name" },
+        { text: "Código", value: "product_code" },
+        { text: "Precio", value: "price" },
+        { text: "Acción", value: "action" }
       ]
     };
   },
@@ -231,11 +203,20 @@ export default {
       currentUser: state => state.session.currentUser
     })
   },
+  created() {
+    this.fetchCategory();
+    this.fetchBrand();
+  },
   async mounted() {
     await this.fetchProduct();
   },
   methods: {
-    ...mapActions(["fetchProduct"]),
+    ...mapActions([
+      "fetchProduct",
+      "createProduct",
+      "fetchCategory",
+      "fetchBrand"
+    ]),
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
@@ -247,7 +228,7 @@ export default {
       this.selectedItem = item;
       this.dialogDelete = true;
     },
-    onDeleteProduct() {
+    onDelete() {
       this.loadDelete = true;
       this.$store
         .dispatch("deleteInvitation", this.selectedItem.id)

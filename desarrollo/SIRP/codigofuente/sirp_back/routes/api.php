@@ -18,12 +18,16 @@ Route::post('/usuario/login','Auth\LoginController@dologin');
 
 Route::group(['middleware' => ['token']], function () {
 
+    //users
+    Route::post('/usuario/listar','UserController@list');
+
     //products
     Route::post('/producto/listar','ProductController@index');
     Route::post('/producto/crear','ProductController@store');
     Route::post('/producto/buscar','ProductController@show');
     Route::post('/producto/actualizar','ProductController@update');
     Route::post('/producto/eliminar','ProductController@destroy');
+    Route::post('/producto/recomendado','ProductController@productIA');
 
     //Brands
     Route::post('/marca/listar','ProductBrandController@index');
@@ -45,5 +49,9 @@ Route::group(['middleware' => ['token']], function () {
     Route::post('/venta/buscar','SalesController@show');
     Route::post('/venta/actualizar','SalesController@update');
     Route::post('/venta/eliminar','SalesController@destroy');
+
+    //dashboard
+    Route::post('/dashboard/ventas','DashboardController@sales');
+    Route::post('/dashboard/productos','DashboardController@salesproducts');
 
 });
