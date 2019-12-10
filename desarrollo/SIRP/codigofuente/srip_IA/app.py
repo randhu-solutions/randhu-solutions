@@ -37,7 +37,8 @@ def get_products_recommedation(product_id):
               "product_id": ds.loc[ds['product_id'] == rec]['product_id'].tolist()[0],
               "product_name": ds.loc[ds['product_id'] == rec]['product_name'].tolist()[0],
               "product_category": ds.loc[ds['product_id'] == rec]['category_name'].tolist()[0],
-              "product_brand": ds.loc[ds['product_id'] == rec]['brand_name'].tolist()[0]
+              "product_brand": ds.loc[ds['product_id'] == rec]['brand_name'].tolist()[0],
+              "product_price": ds.loc[ds['product_id'] == rec]['brand_name'].tolist()[0]
             })
             
         return jsonify(response)
