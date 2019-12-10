@@ -60,16 +60,14 @@
                     </thead>
                   </template>
                   <template v-slot:item.action="{ item }">
-                    <v-menu bottom left>
+                    <v-menu top offset-y>
                       <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on">
                           <v-icon>more_vert</v-icon>
                         </v-btn>
                       </template>
+
                       <v-list>
-                        <v-list-item @click="openDialogDetail(item)">
-                          <v-list-item-title>Ver detalle</v-list-item-title>
-                        </v-list-item>
                         <v-list-item @click="onDialogUpdate(item, 'edit')">
                           <v-list-item-title>Editar</v-list-item-title>
                         </v-list-item>

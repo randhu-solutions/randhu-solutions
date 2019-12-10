@@ -78,7 +78,7 @@
                     <h5>Productos Recomendados</h5>
 
                     <v-data-table
-                      :headers="headers"
+                      :headers="headersRecommendation"
                       :items="currentRecommendations"
                       item-key="id"
                       hide-default-footer
@@ -104,7 +104,7 @@
                             </v-btn>
                           </template>
                           <v-list>
-                            <v-list-item @click="pushProduct(item)">
+                            <v-list-item @click="pushProduct(item, false)">
                               <v-list-item-title>Agregar</v-list-item-title>
                             </v-list-item>
                           </v-list>
@@ -131,58 +131,6 @@
         </v-row>
       </v-container>
     </vue-perfect-scrollbar>
-
-    <v-dialog v-model="dialogAdd" persistent max-width="600px">
-      <product-form
-        :type="typeDialog"
-        :product="selectedItem"
-        @close="dialogAdd = false"
-        @submit="dialogAdd = false"
-      />
-    </v-dialog>
-
-    <v-dialog v-model="dialogDetail" persistent max-width="450px">
-      <v-card v-if="dialogDetail">
-        <v-card-title>
-          <span class="subheading text-uppercase">{{ selectedItem.name }}</span>
-          <span v-if="selectedItem.dni" class="ml-2 body-1"
-            >, DNI: <b>{{ selectedItem.dni }}</b></span
-          >
-        </v-card-title>
-        <v-card-text class="pt-0">
-          <v-list two-line class="pa-0">
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">mail</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ selectedItem.email }}</v-list-tile-title>
-                <v-list-tile-sub-title>Email</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">date_range</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{
-                  selectedItem.regular_visitor
-                    ? "Invitado frecuente"
-                    : selectedItem.invitation_date
-                }}</v-list-tile-title>
-                <v-list-tile-sub-title>Fecha de llegada</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialogDetail = false"
-            >Cerrar</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <v-dialog v-model="dialogDelete" persistent max-width="450px">
       <v-card v-if="dialogDelete">
@@ -239,14 +187,17 @@ export default {
       typeDialog: "new",
       headers: [
         { text: "Nombre", value: "product_name" },
-        { text: "Marca", value: "brand.brand_name" },
-        { text: "Código", value: "product_code" },
         { text: "Precio", value: "price" },
+        { text: "Acción", value: "action" }
+      ],
+      headersRecommendation: [
+        { text: "Nombre", value: "product_name" },
+        { text: "Precio", value: "product_price" },
         { text: "Acción", value: "action" }
       ],
       listProduct: [],
       fetchingRecommendations: false,
-      currentRecommendations: []
+      currentRecommendations: [],
     };
   },
   computed: {
@@ -257,7 +208,7 @@ export default {
       if (this.listProduct.length) {
         let count = 0.0;
         this.listProduct.forEach(e => {
-          count += count + parseFloat(`${e.price}`);
+          count += parseFloat(`${e.price}`);
         });
         return count;
       }
@@ -271,39 +222,31 @@ export default {
       } else {
         this.itemsListSearch = [];
       }
-    }, 100)
-  },
-  created() {
-    this.fetchCategory();
-    this.fetchBrand();
-  },
-  async mounted() {
-    await this.fetchProduct();
+    }, 100),
   },
   methods: {
-    ...mapActions([
-      "fetchProduct",
-      "createProduct",
-      "fetchCategory",
-      "fetchBrand"
-    ]),
     onChangeSelect(event) {
       if (!event) {
         return false;
       }
-      this.pushProduct(event);
+      this.pushProduct(event, true);
       this.fetchRecommendations(event);
     },
-    pushProduct(product) {
-      this.listProduct.push(product);
+    pushProduct(product, flag = false) {
+      const payload = {
+        product_name: product.product_name,
+        price: product.product_price,
+        product_id: product.product_id
+      }
+      this.listProduct.push(flag ? product : payload);
     },
     fetchRecommendations({ product_id }) {
       this.fetchingRecommendations = true;
       const path = "producto/recomendado";
       const payload = { product_id };
       this.axios
-        .post("producto/buscar", {
-          search: "a"
+        .post(path, {
+          product_id
         })
         .then(snap => {
           console.log("response", snap.data.response);
