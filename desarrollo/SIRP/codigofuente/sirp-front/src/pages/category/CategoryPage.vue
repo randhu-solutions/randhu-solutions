@@ -44,17 +44,13 @@
                   :search="searchInvitation"
                   item-key="id"
                   hide-default-footer
-                  hide-default-header
                   class="elevation-2"
                 >
                   <template v-slot:headers="{ props: { headers } }">
                     <thead>
                       <tr>
                         <th v-for="item in headers" :key="item.value">
-                          <span
-                            :key="`span_${item.value}`"
-                            v-html="item.text"
-                          ></span>
+                          <span :key="`span_${item.value}`">item.text</span>
                         </th>
                       </tr>
                     </thead>
@@ -80,6 +76,13 @@
                     </v-menu>
                   </template>
                 </v-data-table>
+                <v-pagination
+                  v-model="currentPage"
+                  class="mt-3"
+                  :length="totalPages"
+                  :total-visible="10"
+                  @input="onChangePagination"
+                ></v-pagination>
               </v-card>
             </v-col>
           </template>
@@ -146,6 +149,7 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
+      currentPage: 1,
       headers: [
         { text: "Nombre", value: "category_name" },
         { text: "Acción", value: "action" }
@@ -155,14 +159,18 @@ export default {
   computed: {
     ...mapState({
       loading: state => state.category.loading,
-      categories: state => state.category.items
+      categories: state => state.category.items,
+      totalPages: state => state.category.totalPages
     })
   },
   async mounted() {
-    await this.fetchCategory();
+    await this.fetchCategory(this.currentPage);
   },
   methods: {
     ...mapActions(["fetchCategory", "deleteCategory"]),
+    async onChangePagination(val) {
+      await this.fetchCategory(val);
+    },
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
