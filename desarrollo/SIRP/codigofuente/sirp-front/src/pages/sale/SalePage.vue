@@ -83,7 +83,9 @@
                 <h5 class="d-block w-100">Total de la venta</h5>
               </v-card-title>
               <v-card-title class="pt-0">
-                <p class="mb-0">Precio total: <b>{{ priceTotal }}</b></p>
+                <p class="mb-0">
+                  Precio total: <b>{{ priceTotal }}</b>
+                </p>
               </v-card-title>
             </v-card>
           </v-col>
@@ -212,9 +214,9 @@ export default {
     }),
     priceTotal() {
       if (this.listProduct.length) {
-        let count = 0.00;
+        let count = 0.0;
         this.listProduct.forEach(e => {
-          count += count + parseFloat(`${e.price}`)
+          count += count + parseFloat(`${e.price}`);
         });
         return count;
       }
@@ -249,7 +251,6 @@ export default {
         return false;
       }
       this.listProduct.push(event);
-      console.log(event);
     },
     clearSearch() {
       // this.loadSearch = false;
