@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\User;
-use http\Env\Response;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -207,5 +210,53 @@ class ProductController extends Controller
         return response()->json($res,$this->status);
     }
 
+    public function productIA(Request $request)
+    {
+        if(!$request->product_id)
+        {
+            $res = [
+                'success' => 0,
+                'msg' => 'Parametro product_id no recibido'
+
+            ];
+            $this->status = 500;
+        }
+        else
+        {
+            $api = new Client;
+            try
+            {
+
+                $product = $api->request('POST',
+                    'https://ia-product-recommendation.herokuapp.com/product/'.$request->product_id);
+
+                $data = json_decode($product->getbody(),TRUE);
+
+            }
+            catch (BadResponseException $e)
+            {
+                $data = $e->getCode();
+
+            }
+            if($data == 500)
+            {
+                $res = [
+                    'success' => 0,
+                    'msg' => 'No hay productos recomendados'
+                ];
+                $this->status = $data;
+            }
+            else
+            {
+                $res= [
+                    'success' => 1,
+                    'response' => $data
+                ];
+            }
+        }
+        return response()->json($res,$this->status);
+    }
+
 
 }
+

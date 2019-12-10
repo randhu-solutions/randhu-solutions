@@ -73,6 +73,45 @@
                       </template>
                     </v-data-table>
                   </v-col>
+
+                  <v-col cols="12">
+                    <h5>Productos Recomendados</h5>
+
+                    <v-data-table
+                      :headers="headers"
+                      :items="currentRecommendations"
+                      item-key="id"
+                      hide-default-footer
+                      class="elevation-2"
+                      :loading="fetchingRecommendations"
+                    >
+                      <template v-slot:headers="{ props: { headers } }">
+                        <thead>
+                          <tr>
+                            <th v-for="item in headers" :key="item.value">
+                              <span :key="`span_${item.value}`">{{
+                                item.text
+                              }}</span>
+                            </th>
+                          </tr>
+                        </thead>
+                      </template>
+                      <template v-slot:item.action="{ item }">
+                        <v-menu bottom left>
+                          <template v-slot:activator="{ on }">
+                            <v-btn icon v-on="on">
+                              <v-icon>more_vert</v-icon>
+                            </v-btn>
+                          </template>
+                          <v-list>
+                            <v-list-item @click="pushProduct(item)">
+                              <v-list-item-title>Agregar</v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                      </template>
+                    </v-data-table>
+                  </v-col>
                 </v-row>
               </v-card-title>
             </v-card>
@@ -205,7 +244,9 @@ export default {
         { text: "Precio", value: "price" },
         { text: "Acción", value: "action" }
       ],
-      listProduct: []
+      listProduct: [],
+      fetchingRecommendations: false,
+      currentRecommendations: []
     };
   },
   computed: {
@@ -250,7 +291,26 @@ export default {
       if (!event) {
         return false;
       }
-      this.listProduct.push(event);
+      this.pushProduct(event);
+      this.fetchRecommendations(event);
+    },
+    pushProduct(product) {
+      this.listProduct.push(product);
+    },
+    fetchRecommendations({ product_id }) {
+      this.fetchingRecommendations = true;
+      const path = "producto/recomendado";
+      const payload = { product_id };
+      this.axios
+        .post("producto/buscar", {
+          search: "a"
+        })
+        .then(snap => {
+          console.log("response", snap.data.response);
+          this.currentRecommendations = snap.data.response;
+        })
+        .catch(console.log)
+        .finally(() => (this.fetchingRecommendations = false));
     },
     clearSearch() {
       // this.loadSearch = false;
