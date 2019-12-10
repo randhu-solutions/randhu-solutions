@@ -6,7 +6,7 @@ import session from "./session";
 import category from "./category";
 import brand from "./brand";
 import products from "./products";
-import areas from "./areas";
+import sales from "./sales";
 // import reserve from "./reserve";
 import axios from "../http";
 
@@ -44,7 +44,7 @@ export default new Vuex.Store({
     category,
     brand,
     products,
-    areas
+    sales
   },
   plugins: [createPersistedState({ paths: ["session"] })]
 });

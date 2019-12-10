@@ -44,7 +44,6 @@
                   :search="searchInvitation"
                   item-key="id"
                   hide-default-footer
-                  hide-default-header
                   class="elevation-2"
                 >
                   <template v-slot:headers="{ props: { headers } }">
@@ -60,16 +59,14 @@
                     </thead>
                   </template>
                   <template v-slot:item.action="{ item }">
-                    <v-menu bottom left>
+                    <v-menu top offset-y>
                       <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on">
                           <v-icon>more_vert</v-icon>
                         </v-btn>
                       </template>
+
                       <v-list>
-                        <v-list-item @click="openDialogDetail(item)">
-                          <v-list-item-title>Ver detalle</v-list-item-title>
-                        </v-list-item>
                         <v-list-item @click="onDialogUpdate(item, 'edit')">
                           <v-list-item-title>Editar</v-list-item-title>
                         </v-list-item>
@@ -80,6 +77,13 @@
                     </v-menu>
                   </template>
                 </v-data-table>
+                <v-pagination
+                  v-model="currentPage"
+                  class="mt-3"
+                  :length="totalPages"
+                  :total-visible="10"
+                  @input="onChangePagination"
+                ></v-pagination>
               </v-card>
             </v-col>
           </template>
@@ -94,49 +98,6 @@
         @close="dialogAdd = false"
         @submit="dialogAdd = false"
       />
-    </v-dialog>
-
-    <v-dialog v-model="dialogDetail" persistent max-width="450px">
-      <v-card v-if="dialogDetail">
-        <v-card-title>
-          <span class="subheading text-uppercase">{{ selectedItem.name }}</span>
-          <span v-if="selectedItem.dni" class="ml-2 body-1"
-            >, DNI: <b>{{ selectedItem.dni }}</b></span
-          >
-        </v-card-title>
-        <v-card-text class="pt-0">
-          <v-list two-line class="pa-0">
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">mail</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ selectedItem.email }}</v-list-tile-title>
-                <v-list-tile-sub-title>Email</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon color="indigo">date_range</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{
-                  selectedItem.regular_visitor
-                    ? "Invitado frecuente"
-                    : selectedItem.invitation_date
-                }}</v-list-tile-title>
-                <v-list-tile-sub-title>Fecha de llegada</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialogDetail = false"
-            >Cerrar</v-btn
-          >
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <v-dialog v-model="dialogDelete" persistent max-width="450px">
@@ -187,6 +148,7 @@ export default {
       loadDelete: false,
       selectedItem: {},
       typeDialog: "new",
+      currentPage: 1,
       headers: [
         { text: "Nombre", value: "product_name" },
         { text: "Marca", value: "brand.brand_name" },
@@ -200,6 +162,7 @@ export default {
     ...mapState({
       loading: state => state.products.loading,
       products: state => state.products.items,
+      totalPages: state => state.products.totalPages,
       currentUser: state => state.session.currentUser
     })
   },
@@ -208,7 +171,7 @@ export default {
     this.fetchBrand();
   },
   async mounted() {
-    await this.fetchProduct();
+    await this.fetchProduct(this.currentPage);
   },
   methods: {
     ...mapActions([
@@ -217,6 +180,9 @@ export default {
       "fetchCategory",
       "fetchBrand"
     ]),
+    async onChangePagination(val) {
+      await this.fetchProduct(val);
+    },
     onDialogUpdate(item = null, type) {
       if (item) {
         this.typeDialog = type;
