@@ -1,17 +1,15 @@
 <template>
-  <div id="appRoot">
+  <v-app id="inspire">
     <template v-if="!$route.meta.public">
-      <v-app id="inspire" class="app">
-        <app-drawer class="app--drawer"></app-drawer>
-        <app-toolbar class="app--toolbar"></app-toolbar>
-        <v-content>
-          <!-- Page Header -->
-          <page-header v-if="$route.meta.breadcrumb"></page-header>
-          <div class="page-wrapper">
-            <router-view></router-view>
-          </div>
-        </v-content>
-      </v-app>
+      <app-drawer class="app--drawer"></app-drawer>
+      <app-toolbar class="app--toolbar"></app-toolbar>
+      <v-content>
+        <!-- Page Header -->
+        <page-header v-if="$route.meta.breadcrumb"></page-header>
+        <div class="page-wrapper">
+          <router-view></router-view>
+        </div>
+      </v-content>
     </template>
     <template v-else>
       <transition>
@@ -20,13 +18,13 @@
         </keep-alive>
       </transition>
     </template>
-  </div>
+  </v-app>
 </template>
 <script>
-import AppDrawer from "@/components/layout/AppDrawer";
-import AppToolbar from "@/components/layout/AppToolbar";
-import PageHeader from "@/components/layout/PageHeader";
-// import AppEvents from  './event'
+import AppDrawer from "@/layout/AppDrawer";
+import AppToolbar from "@/layout/AppToolbar";
+import PageHeader from "@/layout/PageHeader";
+
 export default {
   components: {
     AppDrawer,
@@ -47,7 +45,6 @@ export default {
   }),
 
   computed: {},
-
   created() {
     // AppEvents.forEach(item => {
     //   this.$on(item.name, item.callback);

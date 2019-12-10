@@ -3,8 +3,8 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import roles from "./roles";
 import session from "./session";
-import invitations from "./invitations";
-import neighbor from "./neighbor";
+import category from "./category";
+import brand from "./brand";
 import products from "./products";
 import areas from "./areas";
 // import reserve from "./reserve";
@@ -41,8 +41,8 @@ export default new Vuex.Store({
     roles,
     // reserve,
     session,
-    invitations,
-    neighbor,
+    category,
+    brand,
     products,
     areas
   },
