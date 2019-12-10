@@ -29,11 +29,19 @@ def get_products_recommedation(product_id):
             results[row['product_id']] = similar_items[1:]
 
         recs = results[int(product_id)][:3]
+
         data = np.array(recs)
         response = []
         for i, rec in data:
-            response.append(ds.loc[ds['product_id'] == rec]['product_name'].tolist()[0])
+            response.append({
+              "product_id": ds.loc[ds['product_id'] == rec]['product_id'].tolist()[0],
+              "product_name": ds.loc[ds['product_id'] == rec]['product_name'].tolist()[0],
+              "product_category": ds.loc[ds['product_id'] == rec]['category_name'].tolist()[0],
+              "product_brand": ds.loc[ds['product_id'] == rec]['brand_name'].tolist()[0]
+            })
+            
         return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
