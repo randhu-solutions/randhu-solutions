@@ -1,8 +1,8 @@
 <template>
   <div id="pageDashboard">
     <v-container grid-list-xl fluid>
-      <v-layout row wrap>
-        <v-flex lg8 sm12 xs12>
+      <v-row>
+        <v-col cols="12" lg="8">
           <v-widget title="Ventas mensuales" content-bg="white">
             <v-btn slot="widget-header-action" icon>
               <v-icon class="text--secondary">refresh</v-icon>
@@ -59,8 +59,8 @@
               ></highcharts>
             </div>
           </v-widget>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
